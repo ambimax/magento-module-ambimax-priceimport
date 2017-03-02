@@ -1,0 +1,15 @@
+{
+  "name": "ambimax/magento-module-ambimax-priceimporter",
+  "type": "magento-module",
+  "description": "With this module you can import prices, special prices (incl. start and endtime) and msrp from different products for different websites.",
+  "homepage": "https://www.ambimax.de",
+  "require": {
+    "magento-hackathon/magento-composer-installer": "*"
+  },
+  "authors":[
+    {
+      "name":"Julian Bour",
+      "email":"jb@ambimax.de"
+    }
+  ]
+}

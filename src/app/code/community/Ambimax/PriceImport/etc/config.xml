@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Ambimax_PriceImport>
+            <version>1.0.0</version>
+        </Ambimax_PriceImport>
+    </modules>
+    <global>
+        <helpers>
+            <ambimax_priceimport>
+                <class>Ambimax_PriceImport_Helper</class>
+            </ambimax_priceimport>
+        </helpers>
+        <models>
+            <ambimax_priceimport>
+                <class>Ambimax_PriceImport_Model</class>
+            </ambimax_priceimport>
+        </models>
+    </global>
+    <default>
+        <priceimport_options>
+            <options>
+                <enabled>false</enabled>
+                <cronjob>0 * * * *</cronjob>
+            </options>
+        </priceimport_options>
+    </default>
+    <crontab>
+        <jobs>
+            <ambimax_price_import>
+                <schedule>
+                    <config_path>priceimport_options/options/cronjob</config_path>
+                </schedule>
+                <run>
+                    <model>ambimax_priceimport/observer::import</model>
+                </run>
+            </ambimax_price_import>
+        </jobs>
+    </crontab>
+</config>
