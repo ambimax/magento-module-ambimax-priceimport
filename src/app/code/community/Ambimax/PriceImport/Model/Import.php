@@ -25,7 +25,6 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
 
     /**
      * Import data into product database
-     *
      */
     public function run()
     {
@@ -47,13 +46,10 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
         exit;
 
         $this->_saveNewPrice();
-
     }
 
-
     /**
-     * locates csv-file and return content
-     *
+     * Locates csv-file and return content
      */
     public function _getCsvData()
     {
@@ -95,9 +91,8 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
         return $data;
     }
 
-
     /**
-     * save attributes for each website
+     * Save attributes for each website
      *
      * @param $websiteCode
      * @param $productCollection
@@ -120,6 +115,11 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
         }
     }
 
+    /**
+     * Download file from the SFTP server
+     *
+     * @return string
+     */
     protected function _downloadSftpFile()
     {
         $destination = Mage::getBaseDir().DS.trim(Mage::getStoreConfig('priceimport_options/options/file_sftp_tmp'), '/');
