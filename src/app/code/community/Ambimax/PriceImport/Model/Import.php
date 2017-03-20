@@ -43,9 +43,6 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
             $this->_saveAttributesPerWebsite($website, $product);
 
         }
-        exit;
-
-        $this->_saveNewPrice();
     }
 
     /**
