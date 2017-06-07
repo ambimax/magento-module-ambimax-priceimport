@@ -101,13 +101,22 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
 
         foreach ($productCollection as $item) {
 
+            if(empty($item['sku'])) {
+                continue;
+            }
+
             /** @var Mage_Catalog_Model_Product $product */
             $product = Mage::getModel('catalog/product')->loadByAttribute('sku', $item['sku']);
-            $product->setStoreId($storeId);
+
+            if( ! $product) {
+                throw new Exception(sprintf('Sku "%s" not found', $item['sku']));
+            }
 
             foreach ($item as $key => $value) {
                 $product->setData($key, $value);
             }
+
+            $product->setStoreId($storeId);
             $product->save();
         }
     }
