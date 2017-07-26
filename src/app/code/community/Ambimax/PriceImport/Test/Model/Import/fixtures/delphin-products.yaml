@@ -1,0 +1,171 @@
+---
+scope:
+  website: # Initialize websites
+    - website_id: 2
+      code: usa_website
+      name: USA Website
+      default_group_id: 2
+    - website_id: 3
+      code: canada_website
+      name: Canada Website
+      default_group_id: 3
+    - website_id: 4
+      code: german_website
+      name: German Website
+      default_group_id: 4
+  group: # Initializes store groups
+    - group_id: 2
+      website_id: 2
+      name: USA Store Group
+      default_store_id: 2
+      root_category_id: 2 # Default Category
+    - group_id: 3
+      website_id: 3
+      name: Canada Store Group
+      default_store_id: 3
+      root_category_id: 2 # Default Category
+    - group_id: 4
+      website_id: 4
+      name: German Store Group
+      default_store_id: 4
+      root_category_id: 2 # Default Category
+  store: # Initializes store views
+    - store_id: 2
+      website_id: 2
+      group_id: 2
+      code: usa
+      name: USA Store
+      is_active: 1
+    - store_id: 3
+      website_id: 3
+      group_id: 3
+      code: canada
+      name: Canada Store
+      is_active: 1
+    - store_id: 4
+      website_id: 4
+      group_id: 4
+      code: germany
+      name: Germany Store
+      is_active: 1
+
+config:
+  default/catalog/price/scope: 1 # Set price scope to website
+  default/ambimax_priceimport/options/enabled: 1
+  default/ambimax_priceimport/options/file_location: local
+  default/ambimax_priceimport/options/file_path: var/tmp/ambimax_priceimporter.csv
+
+eav:
+  catalog_product:
+    - entity_id: 23873
+      attribute_set_id: 4
+      name: TetraPond Natural Mix 4 Liter
+      sku: 303297
+      type_id: simple
+      price: 89
+      special_price: 84
+      special_from_date: 2017-01-01
+      special_to_date: 2049-12-31
+      stock_info:
+      stock_color:
+      is_showcaseproduct: 0
+      stock:
+        qty: 338
+        is_in_stock: 1
+
+    - entity_id: 23872
+      attribute_set_id: 4
+      name: TetraPond Natural Mix 1 Liter
+      sku: 303296
+      type_id: simple
+      stock_info:
+      stock_color:
+      is_showcaseproduct: 0
+      price: 150
+      special_price:
+            special_from_date:
+            special_to_date:
+      stock:
+        qty: 690
+        is_in_stock: 1
+
+    - entity_id: 23871
+      sku: 303296G
+      name: TetraPond Natural Mix
+      type_id: grouped
+      attribute_set_id: 4
+      stock_info:
+      stock_color: g
+      is_showcaseproduct: 1
+#      stock:
+#        is_in_stock: 1
+
+    - entity_id: 1000
+      attribute_set_id: 4
+      name: 'Deaktivierter Artikel #1'
+      sku: 000331
+      type_id: simple
+      stock_info:
+      stock_color:
+      is_showcaseproduct: 0
+      price: 111
+      special_price: false
+      special_from_date:
+      special_to_date:
+      stock:
+        qty: 338
+        is_in_stock: 1
+
+    - entity_id: 1001
+      attribute_set_id: 4
+      name: 'Deaktivierter Artikel #2'
+      sku: '001603'
+      type_id: simple
+      stock_info:
+      stock_color:
+      is_showcaseproduct: 0
+      status: 1
+      stock:
+        qty: 690
+        is_in_stock: 1
+
+    - entity_id: 1002
+      attribute_set_id: 4
+      name: 'Deaktivierter Artikel #3'
+      sku: 001614
+      type_id: simple
+      stock_info:
+      stock_color:
+      is_showcaseproduct: 0
+      status: 1
+      stock:
+        qty: 690
+        is_in_stock: 1
+
+    - entity_id: 1003
+      sku: 001614G
+      name: TetraPond Natural Mix
+      type_id: grouped
+      attribute_set_id: 4
+      stock_info:
+      stock_color: g
+      is_showcaseproduct: 1
+      status: 1
+#      stock:
+#        is_in_stock: 1
+
+tables:
+  catalog/product_link:
+    - link_id: 1
+      product_id: 23871
+      linked_product_id: 23873
+      link_type_id: 3
+    - link_id: 2
+      product_id: 23871
+      linked_product_id: 23872
+      link_type_id: 3
+
+    - link_id: 3
+      product_id: 1002
+      linked_product_id: 1003
+      link_type_id: 3

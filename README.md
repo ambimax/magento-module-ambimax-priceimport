@@ -31,19 +31,19 @@ Switch to System-> Configuration-> Catalog-> Price Import Options
 Enable module, set cronjob timer and chose file location
 
 
-##### Import by file
+### Import by file
 
-Type the absolute path of the file(incl. the file itself)
+Type the absolute path of the file (incl. the file itself)
 
-##### Import by url
+### Import by url
 
 Type the url of the destination file
 
-##### Import by sftp
+### Import by sftp
 
 All entries are needed
 
-SFTP File Path: file path on the host system(incl. the file itself)
+SFTP File Path: file path on the host system (incl. the file itself)
 
 SFTP Tmp File Path: file path on the target system. Started from the root path.
 
@@ -54,3 +54,4 @@ SFTP Tmp File Path: file path on the target system. Started from the root path.
 ## Author Information
 
  - Julian Bour, [ambimax® GmbH](https://www.ambimax.de)
+ - Tobias Schifftner, [ambimax® GmbH](https://www.ambimax.de)

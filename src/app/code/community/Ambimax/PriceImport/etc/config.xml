@@ -37,4 +37,13 @@
             </ambimax_price_import>
         </jobs>
     </crontab>
+
+    <phpunit>
+        <suite>
+            <modules>
+                <Ambimax_PriceImport />
+            </modules>
+        </suite>
+    </phpunit>
+
 </config>

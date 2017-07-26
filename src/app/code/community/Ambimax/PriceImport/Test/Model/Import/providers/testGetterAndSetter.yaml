@@ -1,0 +1,18 @@
+---
+
+data:
+  collection:
+    simple-1:
+      sku: simple-1
+      price: 80
+      special_price:
+      special_from_date:
+      special_to_date:
+      website: website1
+    simple-2:
+      sku: simple-2
+      price: 12
+      special_price:
+      special_from_date:
+      special_to_date:
+      website: website1

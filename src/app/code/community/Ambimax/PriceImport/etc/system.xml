@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
     <sections>
-        <priceimport_options translate="label" module="ambimax_priceimport">
+        <ambimax_priceimport translate="label" module="ambimax_priceimport">
             <label>Price Import Options</label>
             <tab>catalog</tab>
             <frontend_type>text</frontend_type>
@@ -138,6 +138,6 @@
                     </fields>
                 </options>
             </groups>
-        </priceimport_options>
+        </ambimax_priceimport>
     </sections>
 </config>

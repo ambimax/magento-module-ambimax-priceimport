@@ -8,9 +8,9 @@
                         <children>
                             <config>
                                 <children>
-                                    <priceimport_options translate="title" module="ambimax_priceimport">
+                                    <ambimax_priceimport translate="title" module="ambimax_priceimport">
                                         <title>Price Import Options</title>
-                                    </priceimport_options>
+                                    </ambimax_priceimport>
                                 </children>
                             </config>
                         </children>
