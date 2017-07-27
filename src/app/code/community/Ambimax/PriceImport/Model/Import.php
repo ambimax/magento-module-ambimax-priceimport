@@ -32,15 +32,16 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
             return;
         }
 
-        $priceData = $this->loadCsvData();
-
-        if (count($priceData) < 1) {
-            throw new Exception ('Price import file is not readable or has a wrong format');
+        if( ! $this->hasPriceData()) {
+            $this->loadCsvData();
         }
 
-        foreach ($priceData as $website => $product) {
-            $this->_saveAttributesPerWebsite($website, $product);
+        $priceData = $this->getPriceData();
+        if(count($priceData) <= 1) {
+            throw new Exception('Price import file not readable or has a wrong format');
         }
+
+        $this->updatePrices();
     }
 
     /**

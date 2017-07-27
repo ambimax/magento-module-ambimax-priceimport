@@ -37,15 +37,6 @@ class Ambimax_PriceImport_Test_Model_Import extends EcomDev_PHPUnit_Test_Case
      */
     public function testLoadDataCsvLocal($providerData)
     {
-//        Mage::app()->getStore()->setConfig('ambimax_priceimport/options/enabled', 1);
-//        Mage::app()->getStore()->setConfig('ambimax_priceimport/options/file_location', Ambimax_PriceImport_Model_Import::TYPE_LOCAL);
-//        Mage::app()->getStore()->setConfig('ambimax_priceimport/options/file_path', 'var/tmp/ambimax_priceimporter.csv');
-//        Mage::app()->getStore()->setConfig('catalog/price/scope', 1);
-//
-//        Mage::getConfig()->setNode('catalog/price/scope', 1);
-//        Mage::app()->getConfig()->removeCache();
-//        Mage::app()->getStore()->setConfig('catalog/price/scope', 1);
-
         $this->assertTrue(Mage::getStoreConfigFlag('ambimax_priceimport/options/enabled'));
         $this->assertEquals(Ambimax_PriceImport_Model_Import::TYPE_LOCAL, Mage::getStoreConfig('ambimax_priceimport/options/file_location'));
         $this->assertEquals('var/tmp/ambimax_priceimporter.csv', Mage::getStoreConfig('ambimax_priceimport/options/file_path'));
@@ -128,6 +119,79 @@ class Ambimax_PriceImport_Test_Model_Import extends EcomDev_PHPUnit_Test_Case
         $this->assertEquals('2016-07-31 00:00:00', $product3->getData('special_to_date'));
     }
 
+    /**
+     * @loadFixture delphin-products
+     * @dataProvider dataProvider
+     */
+    public function testCronjobRun($providerData)
+    {
+        $this->assertTrue(Mage::getStoreConfigFlag('ambimax_priceimport/options/enabled'));
+        $this->assertEquals(Ambimax_PriceImport_Model_Import::TYPE_LOCAL, Mage::getStoreConfig('ambimax_priceimport/options/file_location'));
+        $this->assertEquals('var/tmp/ambimax_priceimporter.csv', Mage::getStoreConfig('ambimax_priceimport/options/file_path'));
+        $this->assertEquals(1, Mage::getStoreConfig('catalog/price/scope'));
+
+        // setup local csv in var/tmp/
+        $this->_createLocalCsvFile('var/tmp/ambimax_priceimporter.csv', $providerData);
+
+        /** @var Ambimax_PriceImport_Model_Import $import */
+        $import = Mage::getSingleton('ambimax_priceimport/import');
+
+        $import->run();
+
+        $data = $import->getPriceData();
+
+        $this->assertArrayHasKey('german_website', $data);
+        $this->assertArrayHasKey('website', current($data['german_website']));
+        $this->assertArrayHasKey('sku', current($data['german_website']));
+        $this->assertArrayHasKey('price', current($data['german_website']));
+
+        // Test store1
+        $storeId = Mage::app()->getStore('germany')->getId();
+
+        /** @var Mage_Catalog_Model_Product $standardProduct */
+        $product1 = Mage::getModel('catalog/product')->setStoreId($storeId)->loadByAttribute('sku', '303297');
+        $product2 = Mage::getModel('catalog/product')->setStoreId($storeId)->loadByAttribute('sku', '303296');
+        $product3 = Mage::getModel('catalog/product')->setStoreId($storeId)->loadByAttribute('sku', '000331');
+
+        $this->assertEquals(59, $product1->getPrice());
+        $this->assertEquals(49, $product1->getSpecialPrice());
+        $this->assertEquals('2017-06-12 00:00:00', $product1->getData('special_from_date'));
+        $this->assertEquals('2049-07-31 00:00:00', $product1->getData('special_to_date'));
+
+        $this->assertEquals(139.5, $product2->getPrice());
+        $this->assertEquals(null, $product2->getSpecialPrice());
+        $this->assertEquals(null, $product2->getData('special_from_date'));
+        $this->assertEquals(null, $product2->getData('special_to_date'));
+
+        $this->assertEquals(111, $product3->getPrice());
+        $this->assertEquals(null, $product2->getSpecialPrice());
+        $this->assertEquals(null, $product2->getData('special_from_date'));
+        $this->assertEquals(null, $product2->getData('special_to_date'));
+
+        // Test store2
+        $storeId = Mage::app()->getStore('usa')->getId();
+
+        /** @var Mage_Catalog_Model_Product $standardProduct */
+        $product1 = Mage::getModel('catalog/product')->setStoreId($storeId)->loadByAttribute('sku', '303297');
+        $product2 = Mage::getModel('catalog/product')->setStoreId($storeId)->loadByAttribute('sku', '303296');
+        $product3 = Mage::getModel('catalog/product')->setStoreId($storeId)->loadByAttribute('sku', '000331');
+
+        $this->assertEquals(89, $product1->getPrice());
+        $this->assertEquals(84, $product1->getSpecialPrice());
+        $this->assertEquals('2017-01-01 00:00:00', $product1->getData('special_from_date'));
+        $this->assertEquals('2049-12-31 00:00:00', $product1->getData('special_to_date'));
+
+        $this->assertEquals(150, $product2->getPrice());
+        $this->assertEquals(null, $product2->getSpecialPrice());
+        $this->assertEquals(null, $product2->getData('special_from_date'));
+        $this->assertEquals(null, $product2->getData('special_to_date'));
+
+        $this->assertEquals(99, $product3->getPrice());
+        $this->assertEquals(97, $product3->getSpecialPrice());
+        $this->assertEquals('2016-06-06 00:00:00', $product3->getData('special_from_date'));
+        $this->assertEquals('2016-07-31 00:00:00', $product3->getData('special_to_date'));
+    }
+
     public function testGetMysqlDate()
     {
         /** @var Ambimax_PriceImport_Model_Import $import */
@@ -145,7 +209,6 @@ class Ambimax_PriceImport_Test_Model_Import extends EcomDev_PHPUnit_Test_Case
      */
     public function testGetterAndSetter($data)
     {
-
         /** @var Ambimax_PriceImport_Model_Import $import */
         $import = Mage::getModel('ambimax_priceimport/import');
 

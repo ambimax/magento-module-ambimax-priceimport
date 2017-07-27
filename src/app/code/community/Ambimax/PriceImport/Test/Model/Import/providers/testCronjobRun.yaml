@@ -1,0 +1,68 @@
+---
+
+providerData:
+  collection:
+    303297:
+      website: german_website
+      sku: 303297
+      price: 59.00
+      sonderpreis: 49.00
+      start_sonderpreis: 12.6.2017
+      ende_sonderpreis: 31.7.2049
+      uvp: 
+    303296:
+      website: german_website
+      sku: 303296
+      price: 139.50
+      sonderpreis: 0
+      start_sonderpreis:
+      ende_sonderpreis:
+      uvp: 
+    000331:
+      website: usa_website
+      sku: 000331
+      price: 99.00
+      sonderpreis: 97.00
+      start_sonderpreis: 06.6.2016
+      ende_sonderpreis: 31.7.2016
+      uvp: 
+    544146:
+      website: german_website
+      sku: 544146
+      price: 11.90
+      sonderpreis: 8.90
+      start_sonderpreis: 06.6.2017
+      ende_sonderpreis: 31.7.2017
+      uvp: 
+    544147:
+      website: german_website
+      sku: 544147
+      price: 11.90
+      sonderpreis: 8.90
+      start_sonderpreis: 06.6.2017
+      ende_sonderpreis: 31.7.2017
+      uvp: 
+    544149:
+      website: german_website
+      sku: 544149
+      price: 19.80
+      sonderpreis: 14.50
+      start_sonderpreis: 06.6.2017
+      ende_sonderpreis: 31.7.2017
+      uvp: 
+    545650:
+      website: german_website
+      sku: 545650
+      price: 149.00
+      sonderpreis: 98.00
+      start_sonderpreis: 06.6.2017
+      ende_sonderpreis: 31.7.2017
+      uvp: 
+    534615:
+      website: german_website
+      sku: 534615
+      price: 59.00
+      sonderpreis: 47.00
+      start_sonderpreis: 06.6.2017
+      ende_sonderpreis: 31.7.2017
+      uvp: 
