@@ -6,7 +6,7 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
     const TYPE_URL = 'url';
     const TYPE_SFTP = 'sftp';
 
-    const CACHE_TIME  = 120;
+    const CACHE_TIME = 120;
 
     const ATTRIBUTE_CODE_SKU = 'sku';
     const ATTRIBUTE_CODE_WEBSITE = 'website';
@@ -14,13 +14,13 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
     protected $_priceData = array();
 
     protected $_map = array(
-        'website' => 'shop',
-        'sku' => 'ARNR',
-        'price' => 'Detailpreis',
-        'special_price' => 'sonderpreis',
+        'website'           => 'shop',
+        'sku'               => 'ARNR',
+        'price'             => 'Detailpreis',
+        'special_price'     => 'sonderpreis',
         'special_from_date' => 'start_sonderpreis',
-        'special_to_date' => 'ende_sonderpreis',
-        'msrp' => 'uvp',
+        'special_to_date'   => 'ende_sonderpreis',
+        'msrp'              => 'uvp',
     );
 
     /**
@@ -28,16 +28,16 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
      */
     public function run()
     {
-        if (!Mage::getStoreConfigFlag('ambimax_priceimport/options/enabled')) {
+        if ( !Mage::getStoreConfigFlag('ambimax_priceimport/options/enabled') ) {
             return;
         }
 
-        if( ! $this->hasPriceData()) {
+        if ( !$this->hasPriceData() ) {
             $this->loadCsvData();
         }
 
         $priceData = $this->getPriceData();
-        if(count($priceData) <= 1) {
+        if ( count($priceData) <= 1 ) {
             throw new Exception('Price import file not readable or has a wrong format');
         }
 
@@ -52,15 +52,15 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
      */
     public function updatePrices($data = null)
     {
-        if(count($data)) {
+        if ( count($data) ) {
             $this->setPriceData($data);
         }
 
-        if( ! $this->hasPriceData()) {
+        if ( !$this->hasPriceData() ) {
             return $this;
         }
 
-        foreach($this->getPriceData() as $websiteCode => $products) {
+        foreach ($this->getPriceData() as $websiteCode => $products) {
             $website = Mage::app()->getWebsite($websiteCode);
             $storeId = $website->getDefaultStore()->getId();
 
@@ -74,19 +74,19 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
                 ->setStoreId($storeId);
 
             /** @var Mage_Catalog_Model_Product $product */
-            foreach($collection as $product) {
+            foreach ($collection as $product) {
 
                 $changes = $products[$product->getSku()];
 
                 $priceFields = array(
                     'special_from_date' => $this->getMysqlDate($changes['special_from_date']),
-                    'special_to_date' => $this->getMysqlDate($changes['special_to_date']),
-                    'price' => $changes['price'],
-                    'special_price' => $changes['special_price'],
+                    'special_to_date'   => $this->getMysqlDate($changes['special_to_date']),
+                    'price'             => $changes['price'],
+                    'special_price'     => $changes['special_price'],
                 );
 
-                foreach($priceFields as $key => $value) {
-                    if($product->getData($key) == $value) {
+                foreach ($priceFields as $key => $value) {
+                    if ( $product->getData($key) == $value ) {
                         unset($priceFields[$key]);
                     }
                 }
@@ -104,7 +104,7 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
      */
     public function convertToString($item)
     {
-        return (string) $item;
+        return (string)$item;
     }
 
     /**
@@ -115,7 +115,7 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
      */
     public function getMysqlDate($input = null)
     {
-        if( ! $input || empty($input)) {
+        if ( !$input || empty($input) ) {
             return null;
         }
 
@@ -130,7 +130,7 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
      */
     public function hasPriceData()
     {
-        return (bool) count($this->_priceData);
+        return (bool)count($this->_priceData);
     }
 
     /**
@@ -141,7 +141,7 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
      */
     public function getPriceData($website = null)
     {
-        if($website) {
+        if ( $website ) {
             return isset($this->_priceData[$website]) ? $this->_priceData[$website] : null;
         }
         return $this->_priceData;
@@ -156,7 +156,7 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
      */
     public function addPriceData($website, $data)
     {
-        if( ! empty($website) && ! empty($data)) {
+        if ( !empty($website) && !empty($data) ) {
             $sku = $data['sku'];
             $this->_priceData[$website][$sku] = $data;
         }
@@ -171,17 +171,17 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
      */
     public function setPriceData($data, $doMapping = true)
     {
-        if($doMapping) {
+        if ( $doMapping ) {
             $result = array();
             $map = array_flip($this->_map);
-            foreach($data as $sku => $values) {
+            foreach ($data as $sku => $values) {
                 $item = array();
-                foreach($values as $field => $value) {
+                foreach ($values as $field => $value) {
                     $field = isset($map[$field]) ? $map[$field] : $field;
                     $item[$field] = $value;
                 }
 
-                if( ! isset($item['sku'])) {
+                if ( !isset($item['sku']) ) {
                     throw new Exception('Sku field not defined');
                 }
                 $sku = $item['sku'];
@@ -204,11 +204,11 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
      */
     public function updateProductAttributes($productIds, array $attributes, $storeId = 0)
     {
-        if($productIds instanceof Mage_Catalog_Model_Product) {
+        if ( $productIds instanceof Mage_Catalog_Model_Product ) {
             $productIds = $productIds->getId();
         }
 
-        if( ! is_array($productIds)) {
+        if ( !is_array($productIds) ) {
             $productIds = array($productIds);
         }
 
@@ -225,6 +225,7 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
      */
     public function loadCsvData()
     {
+        // @codingStandardsIgnoreStart
         $io = new Varien_Io_File();
         switch (Mage::getStoreConfig('ambimax_priceimport/options/file_location')) {
             case Ambimax_PriceImport_Model_Import::TYPE_URL:
@@ -241,12 +242,14 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
                 $io->streamOpen(basename($destination), 'r');
                 break;
         }
+        // @codingStandardsIgnoreEnd
+
         $data = array();
         $columns = null;
         $map = array_flip($this->_map);
         while (false !== ($csvLine = $io->streamReadCsv(',', '""'))) {
 
-            if (!$columns) {
+            if ( !$columns ) {
                 foreach ($csvLine as $field) {
                     $columns[] = isset($map[$field]) ? $map[$field] : $field;
                 }
@@ -270,20 +273,28 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
      */
     protected function _downloadSftpFile()
     {
-        $destination = Mage::getBaseDir().DS.trim(Mage::getStoreConfig('ambimax_priceimport/options/file_sftp_tmp'), '/');
+        $destination = Mage::getBaseDir().DS;
+        $destination .= trim(Mage::getStoreConfig('ambimax_priceimport/options/file_sftp_tmp'), '/');
 
-        if( is_file($destination) && filesize($destination) && (time()-@filemtime($destination)) <= self::CACHE_TIME) {
+        // @codingStandardsIgnoreStart
+        if (
+            is_file($destination)
+            && filesize($destination)
+            && (time() - @filemtime($destination)) <= self::CACHE_TIME
+        ) {
             return $destination;
         }
+        // @codingStandardsIgnoreEnd
 
         $options = array(
-            '{host}' => Mage::getStoreConfig('ambimax_priceimport/options/file_sftp_host'),
+            '{host}'     => Mage::getStoreConfig('ambimax_priceimport/options/file_sftp_host'),
             '{username}' => Mage::getStoreConfig('ambimax_priceimport/options/file_sftp_username'),
             '{password}' => Mage::getStoreConfig('ambimax_priceimport/options/file_sftp_password'),
-            '{path}' => Mage::getStoreConfig('ambimax_priceimport/options/file_sftp_path'),
+            '{path}'     => Mage::getStoreConfig('ambimax_priceimport/options/file_sftp_path'),
         );
 
         // Ensure writeable folder exists
+        // @codingStandardsIgnoreStart
         $io = new Varien_Io_File();
         $io->checkAndCreateFolder(dirname($destination));
 
@@ -292,12 +303,14 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
         $fp = fopen($destination, 'w+');//This is the file where we save the information
         $ch = curl_init($connectionString);
         curl_setopt($ch, CURLOPT_PROTOCOLS, CURLPROTO_SFTP);
-        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_FILE, $fp);
         curl_exec($ch);
-        curl_close ($ch);
+        curl_close($ch);
         fclose($fp);
+        // @codingStandardsIgnoreEnd
+
         return $destination;
     }
 }

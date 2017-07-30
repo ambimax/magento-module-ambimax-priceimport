@@ -10,9 +10,18 @@ class Ambimax_PriceImport_Model_System_Config_Source_File_Location
     public function toOptionArray()
     {
         return array(
-            array('value' => Ambimax_PriceImport_Model_Import::TYPE_LOCAL, 'label'=>Mage::helper('ambimax_priceimport')->__('Local')),
-            array('value' => Ambimax_PriceImport_Model_Import::TYPE_URL, 'label'=>Mage::helper('ambimax_priceimport')->__('Url')),
-            array('value' => Ambimax_PriceImport_Model_Import::TYPE_SFTP, 'label'=>Mage::helper('ambimax_priceimport')->__('S/FTP')),
+            array(
+                'value' => Ambimax_PriceImport_Model_Import::TYPE_LOCAL,
+                'label'=>Mage::helper('ambimax_priceimport')->__('Local')
+            ),
+            array(
+                'value' => Ambimax_PriceImport_Model_Import::TYPE_URL,
+                'label'=>Mage::helper('ambimax_priceimport')->__('Url')
+            ),
+            array(
+                'value' => Ambimax_PriceImport_Model_Import::TYPE_SFTP,
+                'label'=>Mage::helper('ambimax_priceimport')->__('S/FTP')
+            ),
         );
     }
 
