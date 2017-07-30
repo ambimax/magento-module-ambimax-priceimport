@@ -37,7 +37,7 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
         }
 
         $priceData = $this->getPriceData();
-        if ( count($priceData) <= 1 ) {
+        if ( count($priceData) <= 10) {
             throw new Exception('Price import file not readable or has a wrong format');
         }
 
