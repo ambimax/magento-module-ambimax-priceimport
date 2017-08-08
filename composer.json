@@ -1,5 +1,5 @@
 {
-  "name": "ambimax/magento-module-ambimax-priceimporter",
+  "name": "ambimax/magento-module-ambimax-priceimport",
   "type": "magento-module",
   "description": "With this module you can import prices, special prices (incl. start and endtime) and msrp from different products for different websites.",
   "homepage": "https://www.ambimax.de",

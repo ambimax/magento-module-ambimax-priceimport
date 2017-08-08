@@ -1,5 +1,5 @@
 
-# ambimax® PriceImporter
+# ambimax® PriceImport
 
 This modules handles:
  - Import of priceimport.csv by file, url or sftp
@@ -18,7 +18,7 @@ For installation use composer, modman or copy files manually.
 
 ```
 "require": {
-    "ambimax/magento-module-ambimax-priceimporter": "~1.0"
+    "ambimax/magento-module-ambimax-priceimport": "~1.0"
 }
 ```
 
