@@ -18,6 +18,7 @@ class Ambimax_PriceImport_Test_Model_Import extends Ambimax_PriceImport_Test_Abs
     /**
      * @loadFixture delphin-products
      * @dataProvider dataProvider
+     * @singleton ambimax_priceimport/import
      */
     public function testLoadDataCsvLocal($providerData)
     {
@@ -33,7 +34,7 @@ class Ambimax_PriceImport_Test_Model_Import extends Ambimax_PriceImport_Test_Abs
         $this->_createLocalCsvFile('var/tmp/ambimax_priceimporter.csv', $providerData);
 
         /** @var Ambimax_PriceImport_Model_Import $import */
-        $import = Mage::getModel('ambimax_priceimport/import');
+        $import = Mage::getSingleton('ambimax_priceimport/import');
 
         $data = $import->loadCsvData();
 
@@ -105,6 +106,8 @@ class Ambimax_PriceImport_Test_Model_Import extends Ambimax_PriceImport_Test_Abs
     /**
      * @loadFixture delphin-products
      * @dataProvider dataProvider
+     * @singleton ambimax_priceimport/observer
+     * @singleton ambimax_priceimport/import
      */
     public function testCronjobRun($providerData)
     {
@@ -119,12 +122,14 @@ class Ambimax_PriceImport_Test_Model_Import extends Ambimax_PriceImport_Test_Abs
         // setup local csv in var/tmp/
         $this->_createLocalCsvFile('var/tmp/ambimax_priceimporter.csv', $providerData);
 
-        /** @var Ambimax_PriceImport_Model_Import $import */
-        $import = Mage::getSingleton('ambimax_priceimport/import');
+        /** @var Ambimax_Priceimport_Model_Observer $observer */
+        $observer = Mage::getSingleton('ambimax_priceimport/observer');
+        $observer->import();
 
-        $import->run();
+        /** @var Ambimax_PriceImport_Model_Import $observer */
+        $importer = Mage::getSingleton('ambimax_priceimport/import');
 
-        $data = $import->getPriceData();
+        $data = $importer->getPriceData();
 
         $this->assertArrayHasKey('german_website', $data);
         $this->assertArrayHasKey('website', current($data['german_website']));
