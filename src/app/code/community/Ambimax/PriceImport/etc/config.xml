@@ -18,18 +18,18 @@
         </models>
     </global>
     <default>
-        <priceimport_options>
+        <ambimax_priceimport>
             <options>
                 <enabled>false</enabled>
-                <cronjob>0 * * * *</cronjob>
+                <cronjob>20 * * * *</cronjob>
             </options>
-        </priceimport_options>
+        </ambimax_priceimport>
     </default>
     <crontab>
         <jobs>
             <ambimax_price_import>
                 <schedule>
-                    <config_path>priceimport_options/options/cronjob</config_path>
+                    <config_path>ambimax_priceimport/options/cronjob</config_path>
                 </schedule>
                 <run>
                     <model>ambimax_priceimport/observer::import</model>
