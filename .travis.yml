@@ -1,0 +1,37 @@
+language: php
+sudo: false
+
+php:
+  - 5.6
+  - 7.0
+  - 7.1
+
+env:
+  global:
+    - MAGENTO_DB_ALLOWSAME=1
+    - SKIP_CLEANUP=1
+    - MAGETESTSTAND_URL=https://github.com/ambimax/MageTestStand.git
+  matrix:
+    - MAGENTO_VERSION="magento-mirror-1.6.2.0"
+    - MAGENTO_VERSION="magento-mirror-1.7.0.2"
+    - MAGENTO_VERSION="magento-mirror-1.8.1.0"
+#    - MAGENTO_VERSION="magento-mirror-1.9.0.1"
+#    - MAGENTO_VERSION="magento-mirror-1.9.1.1"
+#    - MAGENTO_VERSION="magento-mirror-1.9.2.1"
+#    - MAGENTO_VERSION="magento-mirror-1.9.2.2"
+    - MAGENTO_VERSION="magento-mirror-1.9.3.2"
+
+matrix:
+  fast_finish: true
+  allow_failures:
+    - php: 5.6
+    - php: 7.0
+
+addons:
+  mariadb: '10.1'
+
+script:
+  - curl --retry 2 --retry-delay 5 -f -sSL https://raw.githubusercontent.com/ambimax/MageTestStand/master/setup.sh | bash
+
+notifications:
+  slack: ambimax:2MlPTX9bY9aPxCPhJGxHKIT6
