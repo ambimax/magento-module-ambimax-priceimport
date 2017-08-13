@@ -14,8 +14,8 @@ env:
     - secure: "CizUqMvb6Smacqd1Doq23gawauPtoEbIfvsl13YnbUr+5tR4JB2do4Ousjfa3Bg91PBAodS/73lVVB+IfUeVjSFDDMA0d1O+hyQ4bYYeMhMrpb+5SGx0G8PrGBVHVgAQyNG1eQImFun4wYHC85nNubm53yUPNvVdVT2jX4ESKInmFQuFSYaUMLcRPyiXRRlCbmbOMbWimPuPuJ8DpuzCO8L37095L9mlME+0M850DrNQewwE7gxhuM7Mwwj1ksBZMBbgOYUiTotMKD2/CmR7V6Xf/YsNZg2hB4rTtBI4V1uT+QWwbJdklbEssPyEaWPRXXXuO7ezISJGBPTdECOqa7nfOI2cf/LHEMNf2uq/NiJ0rrcW+oXkkxK7/Klq9ghfnYa/X+5Q2MtpI7xbnSmazLBhG3PfVkkRrVgRjD5CNZ/cdGv55m3IkNE9Agj/CfPCdvfUrC/iKBczthbZT6hVIOwCpm3JicyulB2xNTMYviO1Vds3XKhIV9MHUTILo2wCY+vUQGCmcTjf9DYv9AnzsxaL32HJT+wt0zX7xKCILNshk84kTvcBsu+xr9AOGbsB7kzkDMfm7bCuiJy6buvf/1Jecg6W7q7v2n826BFqcoYdomca5zZBJ455L1qjRd8pS2j1OeVLs7dK/ieIujyVWrvqjBWxggFzge7/x6NymGM="
 
   matrix:
-    - MAGENTO_VERSION="magento-mirror-1.8.1.0"
-    - MAGENTO_VERSION="magento-mirror-1.9.3.2"
+    - MAGENTO_VERSION=magento-mirror-1.8.1.0
+    - MAGENTO_VERSION=magento-mirror-1.9.3.2
 
 matrix:
   fast_finish: true
