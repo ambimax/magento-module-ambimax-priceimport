@@ -35,5 +35,11 @@ addons:
 script:
   - curl --retry 2 --retry-delay 5 -f -sSL https://raw.githubusercontent.com/ambimax/MageTestStand/master/setup.sh | bash
 
+after_failure:
+  # run playbook again to see idempotence failures
+  - git clone https://github.com/ambimax/EcomDev_PHPUnit.git /tmp/EcomDev_PHPUnit
+  - la -lah /tmp/mageteststand.*/.modman/
+  - ${BUILDENV}/bin/phpunit --version
+
 notifications:
   slack: ambimax:2MlPTX9bY9aPxCPhJGxHKIT6
