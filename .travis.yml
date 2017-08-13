@@ -32,6 +32,9 @@ matrix:
 addons:
   mariadb: '10.1'
 
+before_install:
+  - composer config --global github-oauth.github.com "$GITHUB_TOKEN"
+
 script:
   - curl --retry 2 --retry-delay 5 -f -sSL https://raw.githubusercontent.com/ambimax/MageTestStand/master/setup.sh | bash
 
