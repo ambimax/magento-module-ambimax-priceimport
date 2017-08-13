@@ -38,8 +38,14 @@ script:
 after_failure:
   # run playbook again to see idempotence failures
   - git clone https://github.com/ambimax/EcomDev_PHPUnit.git /tmp/EcomDev_PHPUnit
+  - ls -lah /tmp/mageteststand.*/
   - ls -lah /tmp/mageteststand.*/.modman/
+  - ls -lah /tmp/mageteststand.*/.modman/magento-module-ambimax-priceimport/
+  - ls -lah /tmp/mageteststand.*/htdocs/
+  - ls -lah /tmp/mageteststand.*/vendor/
+  - ls -lah /tmp/mageteststand.*/bin/
   - /tmp/mageteststand.*/bin/phpunit --version
+  - ssh git@github.com -v
 
 notifications:
   slack: ambimax:2MlPTX9bY9aPxCPhJGxHKIT6
