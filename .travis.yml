@@ -11,29 +11,34 @@ env:
     - MAGENTO_DB_ALLOWSAME=1
     - SKIP_CLEANUP=1
     - MAGETESTSTAND_URL=https://github.com/ambimax/MageTestStand.git
-    - secure: foSuMFIbJEw8nxc2k1L5qR54cSIAYHduHDzBb18mb2pmpkNQTP26O62/JNopN9W6Tdx4aNuWiYwBqNkJ9AcSjdycdWMNwqI0IOOYKLz2FWpT4oSfKZISQn5HCCbxw66x94AlF93joLrPdUH63bNcp5iYFX57iwNeBhk67maRigVBchRkrXY/CL+9YEpEolnSsPaGIqP/iygxmYNPb4nl3+MCw3Ab2ZLTiB5Y4xxBVH8pWk7fx97WfHrPj9Nu21RM1kh0BlR/2stk5syMHSe2+lCRFBRyQxkv6ziilVnsGvqssxYE/W6eO/y6fMdkW9lW01KaKTs/kk+i6pdz/VloNSvTauJvXz8CKlRTS6W62cfNvMdiAd6lwwijynYy7YiiON5INcVjDgFfL/sTOeOSF3kjpxKzc4JuATpe6xOWBDPFbQ81MVBDR71QI5Ovkbjsa3hBuC6ePE0ZgNoT2tOY9o+4bgV+28d0FZhuClhjOsGldHfJ5UVbNU7GQDvC99sYTwJWkYSFYO7GKgeQTFEcemhuqmx99ZgZO0dbwe3EoL/qRlOFXZ6jNGaD6UwOJcTAiRFJMGv47RcXCPG2YLbqFXNwrmjpYIxECaDMFon6wHkv5uJEte5IeXSJnKrx5T73DnWIQdBpQO6GWsRfssobTBRjCVQnCMY2eAJU8tzH2ro=
+    - secure: "CizUqMvb6Smacqd1Doq23gawauPtoEbIfvsl13YnbUr+5tR4JB2do4Ousjfa3Bg91PBAodS/73lVVB+IfUeVjSFDDMA0d1O+hyQ4bYYeMhMrpb+5SGx0G8PrGBVHVgAQyNG1eQImFun4wYHC85nNubm53yUPNvVdVT2jX4ESKInmFQuFSYaUMLcRPyiXRRlCbmbOMbWimPuPuJ8DpuzCO8L37095L9mlME+0M850DrNQewwE7gxhuM7Mwwj1ksBZMBbgOYUiTotMKD2/CmR7V6Xf/YsNZg2hB4rTtBI4V1uT+QWwbJdklbEssPyEaWPRXXXuO7ezISJGBPTdECOqa7nfOI2cf/LHEMNf2uq/NiJ0rrcW+oXkkxK7/Klq9ghfnYa/X+5Q2MtpI7xbnSmazLBhG3PfVkkRrVgRjD5CNZ/cdGv55m3IkNE9Agj/CfPCdvfUrC/iKBczthbZT6hVIOwCpm3JicyulB2xNTMYviO1Vds3XKhIV9MHUTILo2wCY+vUQGCmcTjf9DYv9AnzsxaL32HJT+wt0zX7xKCILNshk84kTvcBsu+xr9AOGbsB7kzkDMfm7bCuiJy6buvf/1Jecg6W7q7v2n826BFqcoYdomca5zZBJ455L1qjRd8pS2j1OeVLs7dK/ieIujyVWrvqjBWxggFzge7/x6NymGM="
 
   matrix:
-    - MAGENTO_VERSION="magento-mirror-1.6.2.0"
-    - MAGENTO_VERSION="magento-mirror-1.7.0.2"
-    - MAGENTO_VERSION="magento-mirror-1.8.1.0"
-#    - MAGENTO_VERSION="magento-mirror-1.9.0.1"
-#    - MAGENTO_VERSION="magento-mirror-1.9.1.1"
-#    - MAGENTO_VERSION="magento-mirror-1.9.2.1"
-#    - MAGENTO_VERSION="magento-mirror-1.9.2.2"
-    - MAGENTO_VERSION="magento-mirror-1.9.3.2"
+    - MAGENTO_VERSION=magento-mirror-1.8.1.0
+    - MAGENTO_VERSION=magento-mirror-1.9.3.2
 
 matrix:
   fast_finish: true
   allow_failures:
-    - php: 5.6
-    - php: 7.0
+    - php: 7.1
 
 addons:
   mariadb: '10.1'
 
+before_install:
+  - composer config --global github-oauth.github.com "$GITHUB_TOKEN"
+
 script:
   - curl --retry 2 --retry-delay 5 -f -sSL https://raw.githubusercontent.com/ambimax/MageTestStand/master/setup.sh | bash
+
+after_failure:
+  - ls -lah /tmp/mageteststand.*/
+  - ls -lah /tmp/mageteststand.*/.modman/
+  - ls -lah /tmp/mageteststand.*/.modman/magento-module-ambimax-priceimport/
+  - ls -lah /tmp/mageteststand.*/htdocs/
+  - ls -lah /tmp/mageteststand.*/vendor/
+  - ls -lah /tmp/mageteststand.*/bin/
+  - (cd /tmp/mageteststand.*/ && bin/phpunit --version)
 
 notifications:
   slack: ambimax:2MlPTX9bY9aPxCPhJGxHKIT6
