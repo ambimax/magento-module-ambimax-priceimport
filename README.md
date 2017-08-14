@@ -1,9 +1,11 @@
 
 # ambimax® PriceImport
 
+[![Build Status](https://travis-ci.org/ambimax/magento-module-ambimax-priceimport.svg?branch=master)](https://travis-ci.org/ambimax/magento-module-ambimax-priceimport)
+
 This modules handles:
  - Import of priceimport.csv by file, url or sftp
- 
+
 ## Description
 
 With this module you can import prices, special prices
