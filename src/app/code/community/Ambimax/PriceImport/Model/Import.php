@@ -49,6 +49,7 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
      *
      * @param null $data
      * @return $this
+     * @throws Mage_Core_Exception
      */
     public function updatePrices($data = null)
     {
@@ -92,6 +93,14 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
                 }
 
                 $this->updateProductAttributes($product->getId(), $priceFields, $storeId);
+
+                $logInformation = [
+                    'productId'    => $product->getId(),
+                    'storeId'      => $storeId,
+                    'price_fields' => $priceFields
+                ];
+
+                Mage::log($logInformation, LOG_INFO, 'ambimax_priceimport.log');
             }
         }
     }
@@ -167,7 +176,9 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
      * Set price data
      *
      * @param $data
+     * @param bool $doMapping
      * @return $this
+     * @throws Exception
      */
     public function setPriceData($data, $doMapping = true)
     {
@@ -201,6 +212,7 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
      * @param array $attributes
      * @param int $storeId
      * @return $this
+     * @throws Exception
      */
     public function updateProductAttributes($productIds, array $attributes, $storeId = 0)
     {
@@ -270,6 +282,7 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
      * Download file from the SFTP server
      *
      * @return string
+     * @throws Exception
      */
     protected function _downloadSftpFile()
     {
