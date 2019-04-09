@@ -290,7 +290,7 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
      */
     public function getLocalFilePath($additional)
     {
-        if ($additionalImport) {
+        if ($additional) {
             return Mage::getStoreConfig('ambimax_priceimport/options/additional_file_path');
         }
 
