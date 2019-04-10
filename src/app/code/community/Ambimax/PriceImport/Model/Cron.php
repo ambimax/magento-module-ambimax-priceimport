@@ -2,7 +2,10 @@
 
 class Ambimax_PriceImport_Model_Cron
 {
-    public function additionPriceImport()
+    /**
+     * @throws Mage_Core_Exception
+     */
+    public function additionalPriceImport()
     {
         if (!Mage::getStoreConfigFlag('ambimax_priceimport/options/enabled')) {
             return;

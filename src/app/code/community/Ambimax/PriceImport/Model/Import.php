@@ -259,6 +259,8 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
                 $io->open(array('path' => dirname($destination)));
                 $io->streamOpen(basename($destination), 'r');
                 break;
+            default:
+                throw new Exception('No file location selected!');
         }
         // @codingStandardsIgnoreEnd
 

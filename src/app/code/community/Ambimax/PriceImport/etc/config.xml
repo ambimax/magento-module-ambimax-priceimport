@@ -42,7 +42,7 @@
                     <config_path>ambimax_priceimport/options/additional_cronjob</config_path>
                 </schedule>
                 <run>
-                    <model>ambimax_priceimport/cron::additionPriceImport</model>
+                    <model>ambimax_priceimport/cron::additionalPriceImport</model>
                 </run>
             </ambimax_additional_price_import>
         </jobs>
