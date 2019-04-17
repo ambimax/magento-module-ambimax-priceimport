@@ -30,7 +30,7 @@ Login into Admin-Panel.
 
 Switch to ```System-> Configuration-> Catalog-> Price Import Options```.
 
-Enable module, set cronjob timer and chose file location.
+Enable module, set cronjob timer and choose file location.
 
 ##### Additional import
 
