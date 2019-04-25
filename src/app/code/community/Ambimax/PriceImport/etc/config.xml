@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Ambimax_PriceImport>
-            <version>2.1.1</version>
+            <version>2.1.2</version>
         </Ambimax_PriceImport>
     </modules>
     <global>
@@ -37,21 +37,13 @@
                     <model>ambimax_priceimport/observer::import</model>
                 </run>
             </ambimax_price_import>
-            <ambimax_additional_price_import>
-                <schedule>
-                    <config_path>ambimax_priceimport/options/additional_cronjob</config_path>
-                </schedule>
-                <run>
-                    <model>ambimax_priceimport/cron::additionalPriceImport</model>
-                </run>
-            </ambimax_additional_price_import>
         </jobs>
     </crontab>
 
     <phpunit>
         <suite>
             <modules>
-                <Ambimax_PriceImport />
+                <Ambimax_PriceImport/>
             </modules>
         </suite>
     </phpunit>

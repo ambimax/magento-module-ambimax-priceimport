@@ -7,6 +7,6 @@ class Ambimax_Priceimport_Model_Observer
      */
     public function import()
     {
-        Mage::getSingleton('ambimax_priceimport/import')->runPriceImport(false);
+        Mage::getSingleton('ambimax_priceimport/import')->runPriceImport();
     }
 }
