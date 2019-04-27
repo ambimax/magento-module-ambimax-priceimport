@@ -255,6 +255,7 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
      */
     public function loadCsvData($fileLocation)
     {
+        $helper = Mage::helper('ambimax_priceimport');
         // @codingStandardsIgnoreStart
         $io = new Varien_Io_File();
         switch ($fileLocation) {
@@ -292,6 +293,17 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
             $row = array_combine($columns, $csvLine);
             $website = $row['website'];
             $sku = $row['sku'];
+
+            if (!$helper->checkIfSpecialPriceDateIsValidate($row['special_to_date'])) {
+                continue;
+            }
+
+            if (!empty($data[$website][$sku])) {
+                if (!$helper->checkIfNewOfferIsBetter($data[$website][$sku], $row)) {
+                    continue;
+                }
+            }
+
             $data[$website][$sku] = $row;
         }
         $this->setPriceData($data, false);
