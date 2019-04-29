@@ -118,10 +118,8 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
             }
 
             if ($helper->updateIndex()) {
-
                 $helper->reindexProductFlatAndPrice($productIds, $storeId);
                 $helper->clearProductCache($productIds);
-
             }
         }
     }
@@ -283,7 +281,7 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
             $website = $row['website'];
             $sku = $row['sku'];
 
-            if (!$helper->checkIfSpecialPriceDateIsValidate($row['special_to_date'])) {
+            if (!$helper->checkIfSpecialPriceDateIsValid($row['special_to_date'])) {
                 continue;
             }
 

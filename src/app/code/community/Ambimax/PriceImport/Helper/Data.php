@@ -38,10 +38,9 @@ class Ambimax_PriceImport_Helper_Data extends Mage_Core_Helper_Abstract
      * @param string $specialToDate
      * @return bool
      */
-    public function checkIfSpecialPriceDateIsValidate(string $specialToDate)
+    public function checkIfSpecialPriceDateIsValid(string $specialToDate)
     {
-
-        if ($this->getFormatedSpecialDate($specialToDate) > $this->getYMDFormattedCurrentDate()) {
+        if ($this->getFormattedSpecialDate($specialToDate) > $this->getFormattedCurrentDate()) {
             return true;
         }
         return false;
@@ -50,18 +49,18 @@ class Ambimax_PriceImport_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * @return false|string
      */
-    public function getYMDFormattedCurrentDate()
+    public function getFormattedCurrentDate($format = 'Y.m.d')
     {
-        return date('Y.m.d', Mage::getModel('core/date')->timestamp(time()));
+        return date($format, Mage::getModel('core/date')->timestamp(time()));
     }
 
     /**
      * @param string $specialDate
      * @return false|string
      */
-    public function getFormatedSpecialDate(string $specialDate)
+    public function getFormattedSpecialDate(string $specialDate, $format = 'Y.m.d')
     {
-        return date('Y.m.d', Mage::getModel('core/date')->timestamp($specialDate));
+        return date($format, Mage::getModel('core/date')->timestamp($specialDate));
     }
 
     /**
@@ -71,11 +70,11 @@ class Ambimax_PriceImport_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function checkIfNewOfferIsBetter(array $actualOffer, array $futureOffer)
     {
-        if ($this->getYMDFormattedCurrentDate() > $this->getFormatedSpecialDate($futureOffer['special_from_date'])) {
+        if ($this->getFormattedCurrentDate() > $this->getFormattedSpecialDate($futureOffer['special_from_date'])) {
 
             if (
-                $this->getFormatedSpecialDate($futureOffer['special_to_date'])
-                < $this->getFormatedSpecialDate($actualOffer['special_to_date'])
+                $this->getFormattedSpecialDate($futureOffer['special_to_date'])
+                < $this->getFormattedSpecialDate($actualOffer['special_to_date'])
             ) {
                 return true;
             }
