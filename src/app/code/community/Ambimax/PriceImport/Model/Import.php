@@ -24,9 +24,11 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
     );
 
     /**
+     * Import data into product database
+     *
      * @param $additionalImport boolean
      * @throws Mage_Core_Exception
-     * Import data into product database
+     * @throws Exception
      */
     public function runPriceImport()
     {
@@ -52,6 +54,7 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
      * @param null $data
      * @return $this
      * @throws Mage_Core_Exception
+     * @throws Exception
      */
     public function updatePrices($data = null)
     {
@@ -138,7 +141,8 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
      * Return special date in database format
      *
      * @param null $input
-     * @return null|string
+     * @return string|null
+     * @throws Exception
      */
     public function getMysqlDate($input = null)
     {
@@ -252,30 +256,15 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
 
     /**
      * Locates csv-file and return content
+     *
+     * @param $fileLocation
+     * @return array
+     * @throws Exception
      */
     public function loadCsvData($fileLocation)
     {
         $helper = Mage::helper('ambimax_priceimport');
-        // @codingStandardsIgnoreStart
-        $io = new Varien_Io_File();
-        switch ($fileLocation) {
-            case Ambimax_PriceImport_Model_Import::TYPE_URL:
-                $io->streamOpen(Mage::getStoreConfig('ambimax_priceimport/options/url_path'), 'r');
-                break;
-            case Ambimax_PriceImport_Model_Import::TYPE_LOCAL:
-                $destination = $this->getLocalFilePath();
-                $io->open(array('path' => dirname($destination)));
-                $io->streamOpen(basename($destination), 'r');
-                break;
-            case Ambimax_PriceImport_Model_Import::TYPE_SFTP:
-                $destination = $this->_downloadSftpFile();
-                $io->open(array('path' => dirname($destination)));
-                $io->streamOpen(basename($destination), 'r');
-                break;
-            default:
-                throw new Exception('No valide file location selected!');
-        }
-        // @codingStandardsIgnoreEnd
+        $io = $this->getCsvStream($fileLocation);
 
         $data = array();
         $columns = null;
@@ -367,5 +356,36 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
         // @codingStandardsIgnoreEnd
 
         return $destination;
+    }
+
+    /**
+     * @param $fileLocation
+     * @return Varien_Io_File
+     * @throws Exception
+     */
+    public function getCsvStream($fileLocation)
+    {
+        $io = new Varien_Io_File();
+        // @codingStandardsIgnoreStart
+
+        switch ($fileLocation) {
+            case Ambimax_PriceImport_Model_Import::TYPE_URL:
+                $io->streamOpen(Mage::getStoreConfig('ambimax_priceimport/options/url_path'), 'r');
+                break;
+            case Ambimax_PriceImport_Model_Import::TYPE_LOCAL:
+                $destination = $this->getLocalFilePath();
+                $io->open(array('path' => dirname($destination)));
+                $io->streamOpen(basename($destination), 'r');
+                break;
+            case Ambimax_PriceImport_Model_Import::TYPE_SFTP:
+                $destination = $this->_downloadSftpFile();
+                $io->open(array('path' => dirname($destination)));
+                $io->streamOpen(basename($destination), 'r');
+                break;
+            default:
+                throw new Exception('No valide file location selected!');
+        }
+        return $io;
+        // @codingStandardsIgnoreEnd
     }
 }
