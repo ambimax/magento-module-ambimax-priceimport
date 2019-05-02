@@ -27,6 +27,19 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </enabled>
+                        <update_index translate="label">
+                            <label>Update Index And Cache</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Reindex and clear cache of imported products</comment>
+                            <depends>
+                                <enabled>1</enabled>
+                            </depends>
+                        </update_index>
                         <cronjob translate="label">
                             <label>Cronjob</label>
                             <frontend_type>text</frontend_type>
@@ -135,135 +148,6 @@
                                 <file_location>sftp</file_location>
                             </depends>
                         </file_sftp_tmp>
-                        <additional_enabled>
-                            <label>Enable Additional Price Import</label>
-                            <frontend_type>select</frontend_type>
-                            <sort_order>30</sort_order>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends>
-                                <enabled>1</enabled>
-                            </depends>
-                        </additional_enabled>
-                        <additional_cronjob translate="label">
-                            <label>Additional Cronjob</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>40</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <comment>0 * * * * (hourly) | 0 22 * * * (22 o `clock)</comment>
-                            <depends>
-                                <enabled>1</enabled>
-                                <additional_enabled>1</additional_enabled>
-                            </depends>
-                        </additional_cronjob>
-                        <additional_file_location translate="label">
-                            <label>Additional Import File Lokation</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>ambimax_priceimport/system_config_source_file_location</source_model>
-                            <sort_order>50</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends>
-                                <enabled>1</enabled>
-                                <additional_enabled>1</additional_enabled>
-                            </depends>
-                        </additional_file_location>
-                        <additional_file_path>
-                            <label>Additional File Path</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>55</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends>
-                                <enabled>1</enabled>
-                                <additional_enabled>1</additional_enabled>
-                                <additional_file_location>local</additional_file_location>
-                            </depends>
-                        </additional_file_path>
-                        <additional_url_path>
-                            <label>Additional URL Path</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>55</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends>
-                                <enabled>1</enabled>
-                                <additional_enabled>1</additional_enabled>
-                                <additional_file_location>url</additional_file_location>
-                            </depends>
-                        </additional_url_path>
-                        <additional_file_sftp_host>
-                            <label>Additional SFTP Host</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>55</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends>
-                                <enabled>1</enabled>
-                                <additional_enabled>1</additional_enabled>
-                                <additional_file_location>sftp</additional_file_location>
-                            </depends>
-                        </additional_file_sftp_host>
-                        <additional_file_sftp_username>
-                            <label>Additional SFTP Username</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>56</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends>
-                                <enabled>1</enabled>
-                                <additional_enabled>1</additional_enabled>
-                                <additional_file_location>sftp</additional_file_location>
-                            </depends>
-                        </additional_file_sftp_username>
-                        <additional_file_sftp_password>
-                            <label>Additional SFTP Password</label>
-                            <frontend_type>password</frontend_type>
-                            <sort_order>57</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends>
-                                <enabled>1</enabled>
-                                <additional_enabled>1</additional_enabled>
-                                <additional_file_location>sftp</additional_file_location>
-                            </depends>
-                        </additional_file_sftp_password>
-                        <additional_file_sftp_path>
-                            <label>Additional SFTP File Path</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>58</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends>
-                                <enabled>1</enabled>
-                                <additional_enabled>1</additional_enabled>
-                                <additional_file_location>sftp</additional_file_location>
-                            </depends>
-                        </additional_file_sftp_path>
-                        <additional_file_sftp_tmp>
-                            <label>Additional SFTP Tmp File Path</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>59</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends>
-                                <enabled>1</enabled>
-                                <additional_enabled>1</additional_enabled>
-                                <additional_file_location>sftp</additional_file_location>
-                            </depends>
-                        </additional_file_sftp_tmp>
                     </fields>
                 </options>
             </groups>

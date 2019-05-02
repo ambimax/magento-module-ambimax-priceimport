@@ -24,18 +24,20 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
     );
 
     /**
+     * Import data into product database
+     *
      * @param $additionalImport boolean
      * @throws Mage_Core_Exception
-     * Import data into product database
+     * @throws Exception
      */
-    public function runPriceImport($additionalImport)
+    public function runPriceImport()
     {
         if (!Mage::getStoreConfigFlag('ambimax_priceimport/options/enabled')) {
             return;
         }
 
         if (!$this->hasPriceData()) {
-            $this->loadCsvData(Mage::getStoreConfig('ambimax_priceimport/options/file_location'), $additionalImport);
+            $this->loadCsvData(Mage::getStoreConfig('ambimax_priceimport/options/file_location'));
         }
 
         $priceData = $this->getPriceData();
@@ -52,9 +54,12 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
      * @param null $data
      * @return $this
      * @throws Mage_Core_Exception
+     * @throws Exception
      */
     public function updatePrices($data = null)
     {
+        $helper = Mage::helper('ambimax_priceimport');
+
         if (count($data)) {
             $this->setPriceData($data);
         }
@@ -76,10 +81,13 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
                 ->addAttributeToFilter('sku', array('in' => $productSkuCollection))
                 ->setStoreId($storeId);
 
+            $productIds = [];
             /** @var Mage_Catalog_Model_Product $product */
             foreach ($collection as $product) {
 
                 $changes = $products[$product->getSku()];
+
+                $productId = $product->getId();
 
                 $priceFields = array(
                     'special_from_date' => $this->getMysqlDate($changes['special_from_date']),
@@ -94,15 +102,24 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
                     }
                 }
 
-                $this->updateProductAttributes($product->getId(), $priceFields, $storeId);
+                $this->updateProductAttributes($productId, $priceFields, $storeId);
 
                 $logInformation = [
-                    'productId'    => $product->getId(),
+                    'productId'    => $productId,
                     'storeId'      => $storeId,
                     'price_fields' => $priceFields
                 ];
 
                 Mage::log($logInformation, LOG_INFO, 'ambimax_priceimport.log');
+
+                if ($helper->updateIndex()) {
+                    $productIds[] = $productId;
+                }
+            }
+
+            if ($helper->updateIndex()) {
+                $helper->reindexProductFlatAndPrice($productIds, $storeId);
+                $helper->clearProductCache($productIds);
             }
         }
     }
@@ -122,7 +139,8 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
      * Return special date in database format
      *
      * @param null $input
-     * @return null|string
+     * @return string|null
+     * @throws Exception
      */
     public function getMysqlDate($input = null)
     {
@@ -236,33 +254,15 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
 
     /**
      * Locates csv-file and return content
+     *
+     * @param $fileLocation
+     * @return array
+     * @throws Exception
      */
-    public function loadCsvData($fileLocation, $additionalImport)
+    public function loadCsvData($fileLocation)
     {
-        // @codingStandardsIgnoreStart
-        $io = new Varien_Io_File();
-        switch ($fileLocation) {
-            case Ambimax_PriceImport_Model_Import::TYPE_URL:
-                if ($additionalImport) {
-                    $io->streamOpen(Mage::getStoreConfig('ambimax_priceimport/options/additional_url_path'), 'r');
-                    break;
-                }
-                $io->streamOpen(Mage::getStoreConfig('ambimax_priceimport/options/url_path'), 'r');
-                break;
-            case Ambimax_PriceImport_Model_Import::TYPE_LOCAL:
-                $destination = $this->getLocalFilePath($additionalImport);
-                $io->open(array('path' => dirname($destination)));
-                $io->streamOpen(basename($destination), 'r');
-                break;
-            case Ambimax_PriceImport_Model_Import::TYPE_SFTP:
-                $destination = $this->_downloadSftpFile($additionalImport);
-                $io->open(array('path' => dirname($destination)));
-                $io->streamOpen(basename($destination), 'r');
-                break;
-            default:
-                throw new Exception('No valide file location selected!');
-        }
-        // @codingStandardsIgnoreEnd
+        $helper = Mage::helper('ambimax_priceimport');
+        $io = $this->getCsvStream($fileLocation);
 
         $data = array();
         $columns = null;
@@ -280,6 +280,17 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
             $row = array_combine($columns, $csvLine);
             $website = $row['website'];
             $sku = $row['sku'];
+
+            if (!$helper->checkIfSpecialPriceDateIsValid($row['special_to_date'])) {
+                continue;
+            }
+
+            if (!empty($data[$website][$sku])) {
+                if (!$helper->checkIfNewOfferIsBetter($data[$website][$sku], $row)) {
+                    continue;
+                }
+            }
+
             $data[$website][$sku] = $row;
         }
         $this->setPriceData($data, false);
@@ -290,12 +301,8 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
      * @param $additional boolean
      * @return string
      */
-    public function getLocalFilePath($additional)
+    public function getLocalFilePath()
     {
-        if ($additional) {
-            return Mage::getStoreConfig('ambimax_priceimport/options/additional_file_path');
-        }
-
         return Mage::getStoreConfig('ambimax_priceimport/options/file_path');
     }
 
@@ -305,16 +312,11 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
      * @return string
      * @throws Exception
      */
-    protected function _downloadSftpFile($additionalImport)
+    protected function _downloadSftpFile()
     {
         $destination = Mage::getBaseDir() . DS;
-        if ($additionalImport) {
-            $destination .= trim(Mage::getStoreConfig('ambimax_priceimport/options/additional_file_sftp_tmp'), '/');
 
-        }
-        if (!$additionalImport) {
-            $destination .= trim(Mage::getStoreConfig('ambimax_priceimport/options/file_sftp_tmp'), '/');
-        }
+        $destination .= trim(Mage::getStoreConfig('ambimax_priceimport/options/file_sftp_tmp'), '/');
 
         // @codingStandardsIgnoreStart
         if (
@@ -352,5 +354,36 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
         // @codingStandardsIgnoreEnd
 
         return $destination;
+    }
+
+    /**
+     * @param $fileLocation
+     * @return Varien_Io_File
+     * @throws Exception
+     */
+    public function getCsvStream($fileLocation)
+    {
+        $io = new Varien_Io_File();
+        // @codingStandardsIgnoreStart
+
+        switch ($fileLocation) {
+            case Ambimax_PriceImport_Model_Import::TYPE_URL:
+                $io->streamOpen(Mage::getStoreConfig('ambimax_priceimport/options/url_path'), 'r');
+                break;
+            case Ambimax_PriceImport_Model_Import::TYPE_LOCAL:
+                $destination = $this->getLocalFilePath();
+                $io->open(array('path' => dirname($destination)));
+                $io->streamOpen(basename($destination), 'r');
+                break;
+            case Ambimax_PriceImport_Model_Import::TYPE_SFTP:
+                $destination = $this->_downloadSftpFile();
+                $io->open(array('path' => dirname($destination)));
+                $io->streamOpen(basename($destination), 'r');
+                break;
+            default:
+                throw new Exception('No valide file location selected!');
+        }
+        return $io;
+        // @codingStandardsIgnoreEnd
     }
 }
