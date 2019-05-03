@@ -13,9 +13,9 @@ With this module you can import prices, special prices
 for different websites.
 
 
-A product can be occur multiple times. 
-The module takes the data form the earliest end time. 
-So there can be care multiple offers in one file.
+A product can appear as often as desired in the list. 
+The module selects the entry with the earliest end date. 
+Thus several offers can be maintained in a list.
 
 ## Install
 
