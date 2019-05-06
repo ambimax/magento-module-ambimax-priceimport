@@ -12,6 +12,11 @@ With this module you can import prices, special prices
 (incl. start and endtime) and msrp from different products 
 for different websites.
 
+
+A product can appear as often as desired in the list. 
+The module selects the entry with the earliest end date. 
+Thus several offers can be maintained in a list.
+
 ## Install
 
 For installation use composer, modman or copy files manually.
@@ -20,7 +25,7 @@ For installation use composer, modman or copy files manually.
 
 ```
 "require": {
-    "ambimax/magento-module-ambimax-priceimport": "^2.1.0"
+    "ambimax/magento-module-ambimax-priceimport": "^2.2.0"
 }
 ```
 
@@ -31,11 +36,6 @@ Login into Admin-Panel.
 Switch to ```System-> Configuration-> Catalog-> Price Import Options```.
 
 Enable module, set cronjob timer and choose file location.
-
-##### Additional import
-
-Enable ```Enable Additional Price Import``` and set additional settings.
-
 
 ### Import by file
 
