@@ -38,7 +38,7 @@ class Ambimax_PriceImport_Helper_Data extends Mage_Core_Helper_Abstract
      * @param string $specialToDate
      * @return bool
      */
-    public function checkIfSpecialPriceDateIsValid(string $specialToDate)
+    public function checkIfSpecialPriceDateIsValid($specialToDate)
     {
         if ($this->getFormattedSpecialDate($specialToDate) > $this->getFormattedCurrentDate()) {
             return true;
@@ -58,7 +58,7 @@ class Ambimax_PriceImport_Helper_Data extends Mage_Core_Helper_Abstract
      * @param string $specialDate
      * @return false|string
      */
-    public function getFormattedSpecialDate(string $specialDate, $format = 'Y.m.d')
+    public function getFormattedSpecialDate($specialDate, $format = 'Y.m.d')
     {
         return date($format, Mage::getModel('core/date')->timestamp($specialDate));
     }
