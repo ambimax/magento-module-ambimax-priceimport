@@ -40,7 +40,7 @@ class Ambimax_PriceImport_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function checkIfSpecialPriceDateIsValid($specialToDate)
     {
-        if ($this->getFormattedSpecialDate($specialToDate) > $this->getFormattedCurrentDate()) {
+        if ($this->getFormattedSpecialDate($specialToDate) >= $this->getFormattedCurrentDate()) {
             return true;
         }
         return false;
