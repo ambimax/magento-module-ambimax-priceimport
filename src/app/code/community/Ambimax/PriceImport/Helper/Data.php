@@ -81,4 +81,13 @@ class Ambimax_PriceImport_Helper_Data extends Mage_Core_Helper_Abstract
         }
         return false;
     }
+
+    /**
+     * @param string $price
+     * @return string|string[]
+     */
+    public function fixPriceFormat(string $price)
+    {
+        return str_replace(',', '.', $price);
+    }
 }

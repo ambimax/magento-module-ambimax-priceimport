@@ -53,7 +53,9 @@ SFTP File Path: file path on the host system (incl. the file itself).
 
 SFTP Tmp File Path: file path on the target system. Started from the root path.
 
+### Import by AWS S3
 
+Configure AWS settings und set locale path to save the file from S3 storage.
 
 ## License
 

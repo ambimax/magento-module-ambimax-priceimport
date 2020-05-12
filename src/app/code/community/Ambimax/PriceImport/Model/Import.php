@@ -5,6 +5,7 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
     const TYPE_LOCAL = 'local';
     const TYPE_URL = 'url';
     const TYPE_SFTP = 'sftp';
+    const TYPE_S3 = 's3';
 
     const CACHE_TIME = 120;
 
@@ -69,6 +70,7 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
         }
 
         foreach ($this->getPriceData() as $websiteCode => $products) {
+
             $website = Mage::app()->getWebsite($websiteCode);
             $storeId = $website->getDefaultStore()->getId();
 
@@ -189,6 +191,7 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
             $sku = $data['sku'];
             $this->_priceData[$website][$sku] = $data;
         }
+
         return $this;
     }
 
@@ -279,11 +282,16 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
             //build row array
             $row = array_combine($columns, $csvLine);
             $website = $row['website'];
-            $sku = $row['sku'];
+            if (!$sku = $row['sku']) {
+                continue;
+            }
 
             if (!$helper->checkIfSpecialPriceDateIsValid($row['special_to_date'])) {
                 continue;
             }
+
+            $row['price'] = $helper->fixPriceFormat($row['price']);
+            $row['special_price'] = $helper->fixPriceFormat($row['special_price']);
 
             if (!empty($data[$website][$sku])) {
                 if (!$helper->checkIfNewOfferIsBetter($data[$website][$sku], $row)) {
@@ -363,6 +371,7 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
      */
     public function getCsvStream($fileLocation)
     {
+        $s3Helper = Mage::helper('ambimax_priceimport/downloader_s3');
         $io = new Varien_Io_File();
         // @codingStandardsIgnoreStart
 
@@ -377,6 +386,12 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
                 break;
             case Ambimax_PriceImport_Model_Import::TYPE_SFTP:
                 $destination = $this->_downloadSftpFile();
+                $io->open(array('path' => dirname($destination)));
+                $io->streamOpen(basename($destination), 'r');
+                break;
+            case Ambimax_PriceImport_Model_Import::TYPE_S3:
+                $s3Helper->download();
+                $destination = $this->getLocalFilePath();
                 $io->open(array('path' => dirname($destination)));
                 $io->streamOpen(basename($destination), 'r');
                 break;
