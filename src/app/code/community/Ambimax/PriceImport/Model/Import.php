@@ -371,7 +371,7 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
      */
     public function getCsvStream($fileLocation)
     {
-        $s3Helper = Mage::helper('ambimax_priceimport/downloader_s3');
+        $awsHelper = Mage::helper('ambimax_priceimport/downloader_s3');
         $io = new Varien_Io_File();
         // @codingStandardsIgnoreStart
 
@@ -390,7 +390,7 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
                 $io->streamOpen(basename($destination), 'r');
                 break;
             case Ambimax_PriceImport_Model_Import::TYPE_S3:
-                $s3Helper->download();
+                $awsHelper->download();
                 $destination = $this->getLocalFilePath();
                 $io->open(array('path' => dirname($destination)));
                 $io->streamOpen(basename($destination), 'r');
