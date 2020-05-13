@@ -74,6 +74,7 @@
                             <depends>
                                 <enabled>1</enabled>
                                 <file_location>local</file_location>
+                                <file_location>s3</file_location>
                             </depends>
                         </file_path>
                         <url_path>
@@ -148,6 +149,39 @@
                                 <file_location>sftp</file_location>
                             </depends>
                         </file_sftp_tmp>
+                        <s3_profile translate="label">
+                            <label>Profile</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>22</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <file_location>s3</file_location>
+                            </depends>
+                        </s3_profile>
+                        <s3_bucket translate="label">
+                            <label>Bucket</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>22</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <file_location>s3</file_location>
+                            </depends>
+                        </s3_bucket>
+                        <s3_file translate="label">
+                            <label>Source File</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>22</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <file_location>s3</file_location>
+                            </depends>
+                        </s3_file>
                     </fields>
                 </options>
             </groups>

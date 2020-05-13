@@ -22,6 +22,10 @@ class Ambimax_PriceImport_Model_System_Config_Source_File_Location
                 'value' => Ambimax_PriceImport_Model_Import::TYPE_SFTP,
                 'label'=>Mage::helper('ambimax_priceimport')->__('S/FTP')
             ),
+            array(
+                'value' => Ambimax_PriceImport_Model_Import::TYPE_S3,
+                'label'=>Mage::helper('ambimax_priceimport')->__('S3')
+            ),
         );
     }
 
