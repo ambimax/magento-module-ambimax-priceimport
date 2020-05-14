@@ -15,6 +15,8 @@ class Ambimax_PriceImport_Helper_Downloader_S3
         $client->getObject(
             array('Bucket' => $this->getBucket(), 'Key' => $connectionInfo->getFile(), 'SaveAs' => $target)
         );
+
+        return $target;
     }
 
     /**
