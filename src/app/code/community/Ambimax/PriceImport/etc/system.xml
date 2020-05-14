@@ -74,7 +74,6 @@
                             <depends>
                                 <enabled>1</enabled>
                                 <file_location>local</file_location>
-                                <file_location>s3</file_location>
                             </depends>
                         </file_path>
                         <url_path>
@@ -157,6 +156,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <depends>
+                                <enabled>1</enabled>
                                 <file_location>s3</file_location>
                             </depends>
                         </s3_profile>
@@ -168,6 +168,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <depends>
+                                <enabled>1</enabled>
                                 <file_location>s3</file_location>
                             </depends>
                         </s3_bucket>
@@ -179,9 +180,22 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <depends>
+                                <enabled>1</enabled>
                                 <file_location>s3</file_location>
                             </depends>
                         </s3_file>
+                        <s3_local_file>
+                            <label>File Path</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>25</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                                <file_location>s3</file_location>
+                            </depends>
+                        </s3_local_file>
                     </fields>
                 </options>
             </groups>

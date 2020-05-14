@@ -390,8 +390,7 @@ class Ambimax_PriceImport_Model_Import extends Mage_Core_Model_Abstract
                 $io->streamOpen(basename($destination), 'r');
                 break;
             case Ambimax_PriceImport_Model_Import::TYPE_S3:
-                $awsHelper->download();
-                $destination = $this->getLocalFilePath();
+                $destination = $awsHelper->download();
                 $io->open(array('path' => dirname($destination)));
                 $io->streamOpen(basename($destination), 'r');
                 break;
