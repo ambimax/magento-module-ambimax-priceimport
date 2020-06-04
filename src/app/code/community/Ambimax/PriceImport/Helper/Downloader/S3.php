@@ -6,7 +6,7 @@ class Ambimax_PriceImport_Helper_Downloader_S3
 
     public function download()
     {
-        $target = Mage::getBaseDir() . DS . Mage::getStoreConfig('ambimax_priceimport/options/file_path');
+        $target = Mage::getBaseDir() . DS . Mage::getStoreConfig('ambimax_priceimport/options/s3_local_file');
 
         $connectionInfo = $this->getConnectionInfo();
 
