@@ -198,6 +198,194 @@
                         </s3_local_file>
                     </fields>
                 </options>
+                <erp_import_options translate="label">
+                    <label>ERP Import Options</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enabled translate="label">
+                            <label>Enable ERP Price Import</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enabled>
+                        <update_index translate="label">
+                            <label>Update Index And Cache</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Reindex and clear cache of imported products</comment>
+                            <depends>
+                                <enabled>1</enabled>
+                            </depends>
+                        </update_index>
+                        <cronjob translate="label">
+                            <label>Cronjob</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>0 * * * * (hourly) | 0 22 * * * (22 o `clock)</comment>
+                            <depends>
+                                <enabled>1</enabled>
+                            </depends>
+                        </cronjob>
+                        <file_location translate="label">
+                            <label>Import File Lokation</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>ambimax_priceimport/system_config_source_file_location</source_model>
+                            <sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                            </depends>
+                        </file_location>
+                        <file_path>
+                            <label>File Path</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>125</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                                <file_location>local</file_location>
+                            </depends>
+                        </file_path>
+                        <url_path>
+                            <label>URL Path</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>125</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                                <file_location>url</file_location>
+                            </depends>
+                        </url_path>
+                        <file_sftp_host>
+                            <label>SFTP Host</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>125</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                                <file_location>sftp</file_location>
+                            </depends>
+                        </file_sftp_host>
+                        <file_sftp_username>
+                            <label>SFTP Username</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>126</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                                <file_location>sftp</file_location>
+                            </depends>
+                        </file_sftp_username>
+                        <file_sftp_password>
+                            <label>SFTP Password</label>
+                            <frontend_type>password</frontend_type>
+                            <sort_order>127</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                                <file_location>sftp</file_location>
+                            </depends>
+                        </file_sftp_password>
+                        <file_sftp_path>
+                            <label>SFTP File Path</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>128</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                                <file_location>sftp</file_location>
+                            </depends>
+                        </file_sftp_path>
+                        <file_sftp_tmp>
+                            <label>SFTP Tmp File Path</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>129</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                                <file_location>sftp</file_location>
+                            </depends>
+                        </file_sftp_tmp>
+                        <s3_profile translate="label">
+                            <label>Profile</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>122</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                                <file_location>s3</file_location>
+                            </depends>
+                        </s3_profile>
+                        <s3_bucket translate="label">
+                            <label>Bucket</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>122</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                                <file_location>s3</file_location>
+                            </depends>
+                        </s3_bucket>
+                        <s3_file translate="label">
+                            <label>Source File</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>122</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                                <file_location>s3</file_location>
+                            </depends>
+                        </s3_file>
+                        <s3_local_file>
+                            <label>File Path</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>125</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                                <file_location>s3</file_location>
+                            </depends>
+                        </s3_local_file>
+                    </fields>
+                </erp_import_options>
             </groups>
         </ambimax_priceimport>
     </sections>
