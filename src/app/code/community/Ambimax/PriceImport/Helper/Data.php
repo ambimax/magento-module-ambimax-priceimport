@@ -100,7 +100,7 @@ class Ambimax_PriceImport_Helper_Data extends Mage_Core_Helper_Abstract
         return $this->getErpImporter(true)->getPriceDataValue($sku,'UVPINKL');
     }
 
-    public function getErpImporter($load = false):Ambimax_PriceImport_Model_ErpImport
+    public function getErpImporter($load = false) :Ambimax_PriceImport_Model_ErpImport
     {
         if ( !$this->_import ) {
             /** @var Ambimax_PriceImport_Model_ErpImport */

@@ -203,7 +203,7 @@ class Ambimax_PriceImport_Model_ErpImport extends Mage_Core_Model_Abstract
         // @codingStandardsIgnoreEnd
     }
 
-    public function getPriceDataValue($sku, $key, $default = null):?float
+    public function getPriceDataValue($sku, $key, $default = null) :?float
     {
         if ($sku instanceof Mage_Catalog_Model_Product) {
             $sku = $sku->getSku();
@@ -215,7 +215,7 @@ class Ambimax_PriceImport_Model_ErpImport extends Mage_Core_Model_Abstract
         return $default;
     }
 
-    public function roundPrice(float $price):?float
+    public function roundPrice(float $price) :?float
     {
         return round($price*2,1)/2;
     }
