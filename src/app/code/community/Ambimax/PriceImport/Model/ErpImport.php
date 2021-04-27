@@ -16,13 +16,13 @@ class Ambimax_PriceImport_Model_ErpImport extends Mage_Core_Model_Abstract
 
     //not fully used at the moment, use it as an example if you want to change the used Importfile
     protected $_map = array(
-        'website'           => 'shop',
-        'sku'               => 'ARNR',
-        'price'             => 'Detailpreis',
-        'special_price'     => 'sonderpreis',
+        'website' => 'shop',
+        'sku' => 'ARNR',
+        'price' => 'Detailpreis',
+        'special_price' => 'sonderpreis',
         'special_from_date' => 'start_sonderpreis',
-        'special_to_date'   => 'ende_sonderpreis',
-        'msrp'              => 'uvp',
+        'special_to_date' => 'ende_sonderpreis',
+        'msrp' => 'uvp',
     );
 
     /**
@@ -139,10 +139,10 @@ class Ambimax_PriceImport_Model_ErpImport extends Mage_Core_Model_Abstract
         // @codingStandardsIgnoreEnd
 
         $options = array(
-            '{host}'     => Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_host'),
+            '{host}' => Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_host'),
             '{username}' => Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_username'),
             '{password}' => Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_password'),
-            '{path}'     => Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_path'),
+            '{path}' => Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_path'),
         );
 
         // Ensure writeable folder exists
@@ -203,7 +203,7 @@ class Ambimax_PriceImport_Model_ErpImport extends Mage_Core_Model_Abstract
         // @codingStandardsIgnoreEnd
     }
 
-    public function getPriceDataValue($sku, $key, $default = null) :?float
+    public function getPriceDataValue($sku, $key, $default = null): ?float
     {
         if ($sku instanceof Mage_Catalog_Model_Product) {
             $sku = $sku->getSku();
@@ -215,9 +215,9 @@ class Ambimax_PriceImport_Model_ErpImport extends Mage_Core_Model_Abstract
         return $default;
     }
 
-    public function roundPrice(float $price) :?float
+    public function roundPrice(float $price): ?float
     {
-        return round($price*2,1)/2;
+        return round($price * 2, 1) / 2;
     }
 
 }

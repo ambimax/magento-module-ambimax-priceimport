@@ -94,20 +94,22 @@ class Ambimax_PriceImport_Helper_Data extends Mage_Core_Helper_Abstract
         return str_replace(',', '.', $price);
     }
 
-    public function getPriceBySku($sku, $default = 0): ?float
+    public function getPriceBySku($sku): ?float
     {
         $sku = isset($sku['sku']) ? $sku['sku'] : $sku;
-        return $this->getErpImporter(true)->getPriceDataValue($sku,'UVPINKL');
+        return $this->getErpImporter(true)->getPriceDataValue($sku, 'UVPINKL');
     }
 
-    public function getErpImporter($load = false) :Ambimax_PriceImport_Model_ErpImport
+    public function getErpImporter($load = false): Ambimax_PriceImport_Model_ErpImport
     {
-        if ( !$this->_import ) {
+        if (!$this->_import) {
             /** @var Ambimax_PriceImport_Model_ErpImport */
             $this->_import = Mage::getModel('ambimax_priceimport/erpimport');
 
-            if ( $load ) {
-                $this->_import->loadCsvData(Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_location'));
+            if ($load) {
+                $this->_import->loadCsvData(
+                    Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_location')
+                );
             }
         }
         return $this->_import;
