@@ -18,10 +18,10 @@ class Ambimax_PriceImport_Model_ErpImport extends Mage_Core_Model_Abstract
     protected $_map = array(
         'website' => 'shop',
         'sku' => 'ARNR',
-        'price' => 'Detailpreis',
-        'special_price' => 'sonderpreis',
-        'special_from_date' => 'start_sonderpreis',
-        'special_to_date' => 'ende_sonderpreis',
+        'price' => 'PREIS7INKL',
+        'special_price' => 'A-PREISINKL',
+        'special_from_date' => 'A-VON',
+        'special_to_date' => 'A-BIS',
         'msrp' => 'uvp',
     );
 
@@ -84,7 +84,7 @@ class Ambimax_PriceImport_Model_ErpImport extends Mage_Core_Model_Abstract
 
             //build row array
             $row = array_combine($columns, $csvLine);
-            $website = $row['website'];
+            $website = 'de';
             if (!$sku = $row['sku']) {
                 continue;
             }
