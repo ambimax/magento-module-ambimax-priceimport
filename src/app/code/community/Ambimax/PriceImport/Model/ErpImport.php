@@ -16,12 +16,11 @@ class Ambimax_PriceImport_Model_ErpImport extends Mage_Core_Model_Abstract
 
     //not fully used at the moment, use it as an example if you want to change the used Importfile
     protected $_map = array(
-        'website' => 'shop',
         'sku' => 'ARNR',
-        'price' => 'Detailpreis',
-        'special_price' => 'sonderpreis',
-        'special_from_date' => 'start_sonderpreis',
-        'special_to_date' => 'ende_sonderpreis',
+        'price' => 'PREIS7INKL',
+        'special_price' => 'A-PREISINKL',
+        'special_from_date' => 'A-VON',
+        'special_to_date' => 'A-BIS',
         'msrp' => 'uvp',
     );
 
@@ -84,7 +83,6 @@ class Ambimax_PriceImport_Model_ErpImport extends Mage_Core_Model_Abstract
 
             //build row array
             $row = array_combine($columns, $csvLine);
-            $website = $row['website'];
             if (!$sku = $row['sku']) {
                 continue;
             }
@@ -95,13 +93,13 @@ class Ambimax_PriceImport_Model_ErpImport extends Mage_Core_Model_Abstract
             $row['UVPINKL'] = $helper->fixPriceFormat($row['UVPINKL']);
             $row['UVPINKL'] = $helper->fixPriceFormat($row['UVPINKL']);
 
-            if (!empty($data[$website][$sku])) {
-                if (!$helper->checkIfNewOfferIsBetter($data[$website][$sku], $row)) {
+            if (!empty($data[$sku])) {
+                if (!$helper->checkIfNewOfferIsBetter($data[$sku], $row)) {
                     continue;
                 }
             }
 
-            $data['de'][$sku] = $row;
+            $data[$sku] = $row;
         }
         $this->setPriceData($data, false);
         return $data;
@@ -208,8 +206,8 @@ class Ambimax_PriceImport_Model_ErpImport extends Mage_Core_Model_Abstract
         if ($sku instanceof Mage_Catalog_Model_Product) {
             $sku = $sku->getSku();
         }
-        if (isset($this->_priceData['de'][$sku][$key])) {
-            return $this->roundPrice($this->_priceData['de'][$sku][$key]);
+        if (isset($this->_priceData[$sku][$key])) {
+            return $this->roundPrice($this->_priceData[$sku][$key]);
         }
 
         return $default;
