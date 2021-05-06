@@ -98,7 +98,7 @@ class Ambimax_PriceImport_Helper_Data extends Mage_Core_Helper_Abstract
     {
         $sku = $productInformation['sku'];
 
-        if (strpos($sku, 'G' !== false)) {
+        if (strpos($sku, 'G') !== false) {
             return 0;
         }
         $price = $productInformation['price'];
