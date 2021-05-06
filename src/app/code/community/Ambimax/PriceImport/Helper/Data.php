@@ -97,9 +97,17 @@ class Ambimax_PriceImport_Helper_Data extends Mage_Core_Helper_Abstract
     public function getPriceBySku(array $productInformation): ?float
     {
         $sku = $productInformation['sku'];
+
+        if (strpos($sku, 'G')) {
+            return 0;
+        }
         $price = $productInformation['price'];
         $erpPrice = $this->getErpImporter(true)->getPriceDataValue($sku, 'UVPINKL');
-            return isset($erpPrice) ? $erpPrice : $price;
+        $price = isset($erpPrice) ? $erpPrice : $price;
+        if (!is_numeric($price)) {
+            throw new Exception('price is not set:' . $sku);
+        }
+        return $price;
     }
 
     public function getErpImporter(bool $load = false): Ambimax_PriceImport_Model_ErpImport
@@ -116,5 +124,4 @@ class Ambimax_PriceImport_Helper_Data extends Mage_Core_Helper_Abstract
         }
         return $this->_import;
     }
-
 }
