@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Ambimax_PriceImport>
-            <version>3.0.5</version>
+            <version>3.0.6</version>
         </Ambimax_PriceImport>
     </modules>
     <global>
