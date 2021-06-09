@@ -102,7 +102,7 @@ class Ambimax_PriceImport_Helper_Data extends Mage_Core_Helper_Abstract
             return 0;
         }
         $price = $productInformation['price'];
-        $erpPrice = $this->getErpImporter(true)->getPriceDataValue($sku, 'UVPINKL');
+        $erpPrice = $this->getErpImporter(true)->getPriceDataValue($sku, 'Detailpreis');
         $price = isset($erpPrice) ? $erpPrice : $price;
         if (!is_numeric($price)) {
             throw new Exception('price is not set:' . $sku);

@@ -17,7 +17,7 @@ class Ambimax_PriceImport_Model_ErpImport extends Mage_Core_Model_Abstract
     //not fully used at the moment, use it as an example if you want to change the used Importfile
     protected $_map = array(
         'sku' => 'ARNR',
-        'price' => 'PREIS7INKL',
+        'price' => 'Detailpreis',
         'special_price' => 'A-PREISINKL',
         'special_from_date' => 'A-VON',
         'special_to_date' => 'A-BIS',
@@ -72,7 +72,7 @@ class Ambimax_PriceImport_Model_ErpImport extends Mage_Core_Model_Abstract
         $data = array();
         $columns = null;
         $map = array_flip($this->_map);
-        while (false !== ($csvLine = $io->streamReadCsv(',', '""'))) {
+        while (false !== ($csvLine = $io->streamReadCsv(';', '""'))) {
 
             if (!$columns) {
                 foreach ($csvLine as $field) {
