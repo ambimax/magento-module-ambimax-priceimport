@@ -323,6 +323,7 @@
                                 <enabled>1</enabled>
                                 <file_location>sftp</file_location>
                             </depends>
+                            <comment>Put in the file directory with a trailing "/"</comment>
                         </file_sftp_tmp>
                         <file_sftp_name>
                             <label>SFTP File Name</label>
@@ -335,6 +336,7 @@
                                 <enabled>1</enabled>
                                 <file_location>sftp</file_location>
                             </depends>
+                            <comment>Start of the filename for filtering purposes</comment>
                         </file_sftp_name>
                     </fields>
                 </erp_import_options>

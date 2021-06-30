@@ -124,7 +124,7 @@ class Ambimax_PriceImport_Helper_Data extends Mage_Core_Helper_Abstract
         return $this->_import;
     }
 
-    public function getCurrentFile(): array
+    public function getCurrentFiles(): array
     {
         $fileNames = $this->getFileNames();
 
@@ -193,7 +193,7 @@ class Ambimax_PriceImport_Helper_Data extends Mage_Core_Helper_Abstract
 
     }
 
-    protected function getFtpFileNames(): string
+    protected function getFtpFileName(): string
     {
 
         return Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_name');
@@ -203,15 +203,15 @@ class Ambimax_PriceImport_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * @param $originalFilenames
      */
-    public function prepareFileNames($originalFilenames)
+    public function prepareFileNames($originalFilenames): ?array
     {
         if (empty($originalFilenames)) {
-            return;
+            return null;
         }
-        if (!empty($originalFilenames)) {
-            foreach ($originalFilenames as $name) {
-                $filenames[$name] = substr($name, strripos($name, '/') + 1);
-            }
+
+        foreach ($originalFilenames as $name) {
+            $filenames[$name] = substr($name, strripos($name, '/') + 1);
+
         }
 
         return $filenames;
@@ -220,16 +220,16 @@ class Ambimax_PriceImport_Helper_Data extends Mage_Core_Helper_Abstract
     public function getNewestFiles(array $allFileNames): array
     {
         $fileName = $this->cleanFileNames($allFileNames);
-        $onlyPetfriendsFileName = $this->cleanFileNames($allFileNames, 1);
+        $onlyPetfriendsFileName = $this->cleanFileNames($allFileNames, true);
         $fileNames = [];
         array_push($fileNames, $fileName, $onlyPetfriendsFileName);
         return $fileNames;
     }
 
     /*
-     * use $hasSuffix = 1 for list with suffix
+     * use $hasSuffix = true for list with suffix
      */
-    public function cleanFileNames(array $fileNames, int $hasSuffix = 0): string
+    public function cleanFileNames(array $fileNames, bool $hasSuffix = false): string
     {
         if ($hasSuffix) {
             $fileNames = array_filter($fileNames, array($this, 'isOnlyPetfriendsFile'));
@@ -246,11 +246,11 @@ class Ambimax_PriceImport_Helper_Data extends Mage_Core_Helper_Abstract
     public function cleanFtpFiles(array $fileNames): void
     {
         foreach ($fileNames as $filename) {
-            $this->deleteFtpFiles($this->getFtpFilesLocation() . $filename);
+            $this->deleteFtpFile($this->getFtpFilesLocation() . $filename);
         }
     }
 
-    public function deleteFtpFiles($filePath): void
+    public function deleteFtpFile($filePath): void
     {
         $connectionInforamtions = $this->_getConnectionInformations();
 
@@ -266,7 +266,7 @@ class Ambimax_PriceImport_Helper_Data extends Mage_Core_Helper_Abstract
 
     public function isPriceFile(string $fileName): bool
     {
-        $fileNameSetting = $this->getFtpFileNames();
+        $fileNameSetting = $this->getFtpFileName();
         if (!str_starts_with($fileName, $fileNameSetting)) {
             return false;
         }
@@ -278,7 +278,7 @@ class Ambimax_PriceImport_Helper_Data extends Mage_Core_Helper_Abstract
 
     public function isOnlyPetfriendsFile(string $fileName): bool
     {
-        $fileNameSetting = $this->getFtpFileNames() . $this->_listsuffix;
+        $fileNameSetting = $this->getFtpFileName() . $this->_listsuffix;
         if (!str_starts_with($fileName, $fileNameSetting)) {
             return false;
         }

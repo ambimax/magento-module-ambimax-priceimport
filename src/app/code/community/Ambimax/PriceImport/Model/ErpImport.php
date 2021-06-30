@@ -67,7 +67,7 @@ class Ambimax_PriceImport_Model_ErpImport extends Mage_Core_Model_Abstract
     public function loadCsvData()
     {
         $helper = Mage::helper('ambimax_priceimport');
-        $fileNames = $helper->getCurrentFile();
+        $fileNames = $helper->getCurrentFiles();
 
         foreach ($fileNames as $fileName) {
 
