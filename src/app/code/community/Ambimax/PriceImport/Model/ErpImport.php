@@ -18,10 +18,6 @@ class Ambimax_PriceImport_Model_ErpImport extends Mage_Core_Model_Abstract
     protected $_map = array(
         'sku' => 'ARNR',
         'price' => 'Detailpreis',
-        'special_price' => 'A-PREISINKL',
-        'special_from_date' => 'A-VON',
-        'special_to_date' => 'A-BIS',
-        'msrp' => 'uvp',
     );
 
     /**
@@ -69,14 +65,15 @@ class Ambimax_PriceImport_Model_ErpImport extends Mage_Core_Model_Abstract
         $helper = Mage::helper('ambimax_priceimport');
         $fileNames = $helper->getCurrentFiles();
 
+        $data = array();
+        $columns = null;
+        $map = array_flip($this->_map);
+
         foreach ($fileNames as $fileName) {
 
             $fileLocation = Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_location');
             $io = $this->getCsvStream($fileLocation, $fileName);
 
-            $data = array();
-            $columns = null;
-            $map = array_flip($this->_map);
             while (false !== ($csvLine = $io->streamReadCsv(';', '""'))) {
 
                 if (!$columns) {

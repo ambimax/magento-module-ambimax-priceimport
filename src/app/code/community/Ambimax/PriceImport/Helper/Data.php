@@ -211,7 +211,6 @@ class Ambimax_PriceImport_Helper_Data extends Mage_Core_Helper_Abstract
 
         foreach ($originalFilenames as $name) {
             $filenames[$name] = substr($name, strripos($name, '/') + 1);
-
         }
 
         return $filenames;
