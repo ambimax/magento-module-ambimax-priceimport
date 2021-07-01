@@ -17,11 +17,7 @@ class Ambimax_PriceImport_Model_ErpImport extends Mage_Core_Model_Abstract
     //not fully used at the moment, use it as an example if you want to change the used Importfile
     protected $_map = array(
         'sku' => 'ARNR',
-        'price' => 'PREIS7INKL',
-        'special_price' => 'A-PREISINKL',
-        'special_from_date' => 'A-VON',
-        'special_to_date' => 'A-BIS',
-        'msrp' => 'uvp',
+        'price' => 'Detailpreis',
     );
 
     /**
@@ -64,42 +60,42 @@ class Ambimax_PriceImport_Model_ErpImport extends Mage_Core_Model_Abstract
      * @return array
      * @throws Exception
      */
-    public function loadCsvData($fileLocation)
+    public function loadCsvData()
     {
         $helper = Mage::helper('ambimax_priceimport');
-        $io = $this->getCsvStream($fileLocation);
+        $fileNames = $helper->getCurrentFiles();
 
         $data = array();
         $columns = null;
         $map = array_flip($this->_map);
-        while (false !== ($csvLine = $io->streamReadCsv(',', '""'))) {
 
-            if (!$columns) {
-                foreach ($csvLine as $field) {
-                    $columns[] = isset($map[$field]) ? $map[$field] : $field;
-                }
-                continue;
-            }
+        foreach ($fileNames as $fileName) {
 
-            //build row array
-            $row = array_combine($columns, $csvLine);
-            if (!$sku = $row['sku']) {
-                continue;
-            }
+            $fileLocation = Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_location');
+            $io = $this->getCsvStream($fileLocation, $fileName);
 
-            if (!$helper->checkIfSpecialPriceDateIsValid($row['special_to_date'])) {
-                continue;
-            }
-            $row['UVPINKL'] = $helper->fixPriceFormat($row['UVPINKL']);
-            $row['UVPINKL'] = $helper->fixPriceFormat($row['UVPINKL']);
+            while (false !== ($csvLine = $io->streamReadCsv(';', '""'))) {
 
-            if (!empty($data[$sku])) {
-                if (!$helper->checkIfNewOfferIsBetter($data[$sku], $row)) {
+                if (!$columns) {
+                    foreach ($csvLine as $field) {
+                        $columns[] = isset($map[$field]) ? $map[$field] : $field;
+                    }
                     continue;
                 }
-            }
 
-            $data[$sku] = $row;
+                //build row array
+                $row = array_combine($columns, $csvLine);
+                if (!$sku = $row['sku']) {
+                    continue;
+                }
+
+                if (!$helper->checkIfSpecialPriceDateIsValid($row['special_to_date'])) {
+                    continue;
+                }
+                $row['price'] = $helper->fixPriceFormat($row['price']);
+
+                $data[$sku] = $row;
+            }
         }
         $this->setPriceData($data, false);
         return $data;
@@ -109,9 +105,9 @@ class Ambimax_PriceImport_Model_ErpImport extends Mage_Core_Model_Abstract
      * @param $additional boolean
      * @return string
      */
-    public function getLocalFilePath()
+    public function getLocalFilePath($fileName)
     {
-        return Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_path');
+        return Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_path') . $fileName;
     }
 
     /**
@@ -120,7 +116,7 @@ class Ambimax_PriceImport_Model_ErpImport extends Mage_Core_Model_Abstract
      * @return string
      * @throws Exception
      */
-    protected function _downloadSftpFile()
+    protected function _downloadSftpFile($fileName)
     {
         $destination = Mage::getBaseDir() . DS;
 
@@ -148,7 +144,7 @@ class Ambimax_PriceImport_Model_ErpImport extends Mage_Core_Model_Abstract
         $io = new Varien_Io_File();
         $io->checkAndCreateFolder(dirname($destination));
 
-        $connectionString = str_replace(array_keys($options), $options, 'sftp://{username}:{password}@{host}{path}');
+        $connectionString = str_replace(array_keys($options), $options, 'sftp://{username}:{password}@{host}{path}' . $fileName);
 
         $fp = fopen($destination, 'w+');//This is the file where we save the information
         $ch = curl_init($connectionString);
@@ -169,28 +165,20 @@ class Ambimax_PriceImport_Model_ErpImport extends Mage_Core_Model_Abstract
      * @return Varien_Io_File
      * @throws Exception
      */
-    public function getCsvStream($fileLocation)
+    public function getCsvStream($fileLocation, $fileName)
     {
         $awsHelper = Mage::helper('ambimax_priceimport/downloader_s3');
         $io = new Varien_Io_File();
         // @codingStandardsIgnoreStart
 
         switch ($fileLocation) {
-            case Ambimax_PriceImport_Model_Import::TYPE_URL:
-                $io->streamOpen(Mage::getStoreConfig('ambimax_priceimport/erp_import_options/url_path'), 'r');
-                break;
             case Ambimax_PriceImport_Model_Import::TYPE_LOCAL:
-                $destination = $this->getLocalFilePath();
+                $destination = $this->getLocalFilePath($fileName);
                 $io->open(array('path' => dirname($destination)));
                 $io->streamOpen(basename($destination), 'r');
                 break;
             case Ambimax_PriceImport_Model_Import::TYPE_SFTP:
-                $destination = $this->_downloadSftpFile();
-                $io->open(array('path' => dirname($destination)));
-                $io->streamOpen(basename($destination), 'r');
-                break;
-            case Ambimax_PriceImport_Model_Import::TYPE_S3:
-                $destination = $awsHelper->download();
+                $destination = $this->_downloadSftpFile($fileName);
                 $io->open(array('path' => dirname($destination)));
                 $io->streamOpen(basename($destination), 'r');
                 break;

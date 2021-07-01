@@ -243,7 +243,7 @@
                         <file_location translate="label">
                             <label>Import File Lokation</label>
                             <frontend_type>select</frontend_type>
-                            <source_model>ambimax_priceimport/system_config_source_file_location</source_model>
+                            <source_model>ambimax_priceimport/system_config_source_file_erplocation</source_model>
                             <sort_order>120</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -264,18 +264,6 @@
                                 <file_location>local</file_location>
                             </depends>
                         </file_path>
-                        <url_path>
-                            <label>URL Path</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>125</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends>
-                                <enabled>1</enabled>
-                                <file_location>url</file_location>
-                            </depends>
-                        </url_path>
                         <file_sftp_host>
                             <label>SFTP Host</label>
                             <frontend_type>text</frontend_type>
@@ -335,55 +323,21 @@
                                 <enabled>1</enabled>
                                 <file_location>sftp</file_location>
                             </depends>
+                            <comment>Put in the file directory with a trailing "/"</comment>
                         </file_sftp_tmp>
-                        <s3_profile translate="label">
-                            <label>Profile</label>
+                        <file_sftp_name>
+                            <label>SFTP File Name</label>
                             <frontend_type>text</frontend_type>
-                            <sort_order>122</sort_order>
+                            <sort_order>130</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <depends>
                                 <enabled>1</enabled>
-                                <file_location>s3</file_location>
+                                <file_location>sftp</file_location>
                             </depends>
-                        </s3_profile>
-                        <s3_bucket translate="label">
-                            <label>Bucket</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>122</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends>
-                                <enabled>1</enabled>
-                                <file_location>s3</file_location>
-                            </depends>
-                        </s3_bucket>
-                        <s3_file translate="label">
-                            <label>Source File</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>122</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends>
-                                <enabled>1</enabled>
-                                <file_location>s3</file_location>
-                            </depends>
-                        </s3_file>
-                        <s3_local_file>
-                            <label>File Path</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>125</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends>
-                                <enabled>1</enabled>
-                                <file_location>s3</file_location>
-                            </depends>
-                        </s3_local_file>
+                            <comment>Start of the filename for filtering purposes</comment>
+                        </file_sftp_name>
                     </fields>
                 </erp_import_options>
             </groups>

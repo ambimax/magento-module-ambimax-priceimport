@@ -4,6 +4,7 @@ class Ambimax_PriceImport_Helper_Data extends Mage_Core_Helper_Abstract
 {
 
     protected $_import;
+    protected $_listsuffix = "-fwpf-";
 
     /**
      * @return bool
@@ -102,7 +103,7 @@ class Ambimax_PriceImport_Helper_Data extends Mage_Core_Helper_Abstract
             return 0;
         }
         $price = $productInformation['price'];
-        $erpPrice = $this->getErpImporter(true)->getPriceDataValue($sku, 'UVPINKL');
+        $erpPrice = $this->getErpImporter(true)->getPriceDataValue($sku, 'price');
         $price = isset($erpPrice) ? $erpPrice : $price;
         if (!is_numeric($price)) {
             throw new Exception('price is not set:' . $sku);
@@ -117,11 +118,171 @@ class Ambimax_PriceImport_Helper_Data extends Mage_Core_Helper_Abstract
             $this->_import = Mage::getModel('ambimax_priceimport/erpImport');
 
             if ($load) {
-                $this->_import->loadCsvData(
-                    Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_location')
-                );
+                $this->_import->loadCsvData();
             }
         }
         return $this->_import;
     }
+
+    public function getCurrentFiles(): array
+    {
+        $fileNames = $this->getFileNames();
+
+        return $this->getNewestFiles($fileNames);
+    }
+
+    public function getFileNames(): array
+    {
+        $connectionInforamtions = $this->_getConnectionInformations();
+
+        //@codingStandardsIgnoreStart
+        $connectionId = ftp_connect($connectionInforamtions['serverAddress']);
+        if (!ftp_login($connectionId, $connectionInforamtions['username'], $connectionInforamtions['password'])) {
+            $this->throwLoginError($connectionInforamtions['serverAddress'], $connectionInforamtions['username']);
+        }
+
+        ftp_pasv($connectionId, true);
+        $fileNames = $this->prepareFileNames(ftp_nlist($connectionId, $connectionInforamtions['path']));
+
+        ftp_close($connectionId);
+        //@codingStandardsIgnoreEnd
+
+        return $fileNames;
+    }
+
+    /**
+     * @return array
+     */
+    protected function _getConnectionInformations(): array
+    {
+        $connectionConfig = array(
+            'username' => $this->getFtpUser(),
+            'password' => $this->getFtpPassword(),
+            'serverAddress' => $this->getFtpServerAddress(),
+            'path' => $this->getFtpFilesLocation(),
+        );
+
+        return $connectionConfig;
+    }
+
+    protected function getFtpUser(): string
+    {
+
+        return Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_username');
+
+    }
+
+    protected function getFtpPassword(): string
+    {
+
+        return Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_password');
+
+    }
+
+    protected function getFtpServerAddress(): string
+    {
+
+        return Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_host');
+
+    }
+
+    protected function getFtpFilesLocation(): string
+    {
+
+        return Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_path');
+
+    }
+
+    protected function getFtpFileName(): string
+    {
+
+        return Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_name');
+
+    }
+
+    /**
+     * @param $originalFilenames
+     */
+    public function prepareFileNames($originalFilenames): ?array
+    {
+        if (empty($originalFilenames)) {
+            return null;
+        }
+
+        foreach ($originalFilenames as $name) {
+            $filenames[$name] = substr($name, strripos($name, '/') + 1);
+        }
+
+        return $filenames;
+    }
+
+    public function getNewestFiles(array $allFileNames): array
+    {
+        $fileName = $this->cleanFileNames($allFileNames);
+        $onlyPetfriendsFileName = $this->cleanFileNames($allFileNames, true);
+        $fileNames = [];
+        array_push($fileNames, $fileName, $onlyPetfriendsFileName);
+        return $fileNames;
+    }
+
+    /*
+     * use $hasSuffix = true for list with suffix
+     */
+    public function cleanFileNames(array $fileNames, bool $hasSuffix = false): string
+    {
+        if ($hasSuffix) {
+            $fileNames = array_filter($fileNames, array($this, 'isOnlyPetfriendsFile'));
+        } else $fileNames = array_filter($fileNames, array($this, 'isPriceFile'));
+
+        sort($fileNames);
+        $newestFileName = array_pop($fileNames);
+        if (!empty($fileNames)) {
+            $this->cleanFtpFiles($fileNames);
+        }
+        return $newestFileName;
+    }
+
+    public function cleanFtpFiles(array $fileNames): void
+    {
+        foreach ($fileNames as $filename) {
+            $this->deleteFtpFile($this->getFtpFilesLocation() . $filename);
+        }
+    }
+
+    public function deleteFtpFile($filePath): void
+    {
+        $connectionInforamtions = $this->_getConnectionInformations();
+
+        //@codingStandardsIgnoreStart
+        $connectionId = ftp_connect($connectionInforamtions['serverAddress']);
+        if (!ftp_login($connectionId, $connectionInforamtions['username'], $connectionInforamtions['password'])) {
+            $this->throwLoginError($connectionInforamtions['serverAddress'], $connectionInforamtions['username']);
+        }
+        ftp_delete($connectionId, $filePath);
+        ftp_close($connectionId);
+        //@codingStandardsIgnoreEnd
+    }
+
+    public function isPriceFile(string $fileName): bool
+    {
+        $fileNameSetting = $this->getFtpFileName();
+        if (!str_starts_with($fileName, $fileNameSetting)) {
+            return false;
+        }
+        if (!str_starts_with($fileName, $fileNameSetting . $this->_listsuffix)) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isOnlyPetfriendsFile(string $fileName): bool
+    {
+        $fileNameSetting = $this->getFtpFileName() . $this->_listsuffix;
+        if (!str_starts_with($fileName, $fileNameSetting)) {
+            return false;
+        }
+        return true;
+    }
+
+
 }
