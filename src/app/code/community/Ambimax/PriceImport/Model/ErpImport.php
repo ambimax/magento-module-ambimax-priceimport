@@ -89,9 +89,6 @@ class Ambimax_PriceImport_Model_ErpImport extends Mage_Core_Model_Abstract
                     continue;
                 }
 
-                if (!$helper->checkIfSpecialPriceDateIsValid($row['special_to_date'])) {
-                    continue;
-                }
                 $row['price'] = $helper->fixPriceFormat($row['price']);
 
                 $data[$sku] = $row;
