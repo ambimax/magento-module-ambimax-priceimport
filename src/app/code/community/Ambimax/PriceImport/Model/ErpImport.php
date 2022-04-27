@@ -136,17 +136,17 @@ class Ambimax_PriceImport_Model_ErpImport extends Mage_Core_Model_Abstract
 
         $handle = fopen($destination, 'w');
 
-        $ftp_server = Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_host');
-        $ftp_user_name = Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_username');
-        $ftp_user_pass = Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_password');
+        $host = Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_host');
+        $username = Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_username');
+        $password = Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_password');
         $path = Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_path') . $fileName;
 
-        $conn_id = ftp_ssl_connect($ftp_server);
+        $connectionId = ftp_ssl_connect($host);
 
-        $login_result = ftp_login($conn_id, $ftp_user_name, $ftp_user_pass);
-        ftp_pasv($conn_id, true);
-        ftp_fget($conn_id, $handle, $path, FTP_ASCII, 0);
-        ftp_close($conn_id); 
+        $login_result = ftp_login($connectionId, $username, $password);
+        ftp_pasv($connectionId, true);
+        ftp_fget($connectionId, $handle, $path, FTP_ASCII, 0);
+        ftp_close($connectionId); 
 
         return $destination;
     }
