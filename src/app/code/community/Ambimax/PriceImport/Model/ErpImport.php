@@ -129,30 +129,24 @@ class Ambimax_PriceImport_Model_ErpImport extends Mage_Core_Model_Abstract
         }
         // @codingStandardsIgnoreEnd
 
-        $options = array(
-            '{host}' => Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_host'),
-            '{username}' => Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_username'),
-            '{password}' => Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_password'),
-            '{path}' => Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_path'),
-        );
-
         // Ensure writeable folder exists
         // @codingStandardsIgnoreStart
         $io = new Varien_Io_File();
         $io->checkAndCreateFolder(dirname($destination));
 
-        $connectionString = str_replace(array_keys($options), $options, 'sftp://{username}:{password}@{host}{path}' . $fileName);
+        $handle = fopen($destination, 'w');
 
-        $fp = fopen($destination, 'w+');//This is the file where we save the information
-        $ch = curl_init($connectionString);
-        curl_setopt($ch, CURLOPT_PROTOCOLS, CURLPROTO_SFTP);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_FILE, $fp);
-        curl_exec($ch);
-        curl_close($ch);
-        fclose($fp);
-        // @codingStandardsIgnoreEnd
+        $host = Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_host');
+        $username = Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_username');
+        $password = Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_password');
+        $path = Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_path') . $fileName;
+
+        $connectionId = ftp_ssl_connect($host);
+
+        $login_result = ftp_login($connectionId, $username, $password);
+        ftp_pasv($connectionId, true);
+        ftp_fget($connectionId, $handle, $path, FTP_ASCII, 0);
+        ftp_close($connectionId); 
 
         return $destination;
     }
