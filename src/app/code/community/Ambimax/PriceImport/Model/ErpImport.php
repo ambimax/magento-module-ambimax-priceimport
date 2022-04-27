@@ -160,7 +160,6 @@ class Ambimax_PriceImport_Model_ErpImport extends Mage_Core_Model_Abstract
     {
         $awsHelper = Mage::helper('ambimax_priceimport/downloader_s3');
         $io = new Varien_Io_File();
-        $this->sftp
         // @codingStandardsIgnoreStart
 
         switch ($fileLocation) {
