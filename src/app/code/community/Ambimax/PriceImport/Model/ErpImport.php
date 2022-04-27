@@ -129,30 +129,24 @@ class Ambimax_PriceImport_Model_ErpImport extends Mage_Core_Model_Abstract
         }
         // @codingStandardsIgnoreEnd
 
-        $options = array(
-            '{host}' => Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_host'),
-            '{username}' => Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_username'),
-            '{password}' => Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_password'),
-            '{path}' => Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_path'),
-        );
-
         // Ensure writeable folder exists
         // @codingStandardsIgnoreStart
         $io = new Varien_Io_File();
         $io->checkAndCreateFolder(dirname($destination));
 
-        $connectionString = str_replace(array_keys($options), $options, 'sftp://{username}:{password}@{host}{path}' . $fileName);
+        $handle = fopen($destination, 'w');
 
-        $fp = fopen($destination, 'w+');//This is the file where we save the information
-        $ch = curl_init($connectionString);
-        curl_setopt($ch, CURLOPT_PROTOCOLS, CURLPROTO_SFTP);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_FILE, $fp);
-        curl_exec($ch);
-        curl_close($ch);
-        fclose($fp);
-        // @codingStandardsIgnoreEnd
+        $ftp_server = Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_host');
+        $ftp_user_name = Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_username');
+        $ftp_user_pass = Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_password');
+        $path = Mage::getStoreConfig('ambimax_priceimport/erp_import_options/file_sftp_path') . $fileName;
+
+        $conn_id = ftp_ssl_connect($ftp_server);
+
+        $login_result = ftp_login($conn_id, $ftp_user_name, $ftp_user_pass);
+        ftp_pasv($conn_id, true);
+        ftp_fget($conn_id, $handle, $path, FTP_ASCII, 0);
+        ftp_close($conn_id); 
 
         return $destination;
     }
@@ -166,6 +160,7 @@ class Ambimax_PriceImport_Model_ErpImport extends Mage_Core_Model_Abstract
     {
         $awsHelper = Mage::helper('ambimax_priceimport/downloader_s3');
         $io = new Varien_Io_File();
+        $this->sftp
         // @codingStandardsIgnoreStart
 
         switch ($fileLocation) {
